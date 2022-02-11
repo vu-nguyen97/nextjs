@@ -1,0 +1,35 @@
+.formSignIn,
+.formSignUp {
+  min-height: 100vh;
+  padding: 2rem 0;
+
+  .bg-facebook {
+    background-color: $bg-facebook;
+
+    &:hover {
+      background-color: darken($bg-facebook, 4%);
+    }
+  }
+
+  .bg-google {
+    background-color: $bg-google;
+
+    &:hover {
+      background-color: darken($bg-google, 4%);
+    }
+  }
+
+  .bg-facebook,
+  .bg-google {
+    cursor: pointer;
+    color: white;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.25rem;
+  }
+}
+
+.formWrapper {
+  width: 500px;
+  border-radius: 0.5rem;
+  padding: 3rem;
+}
