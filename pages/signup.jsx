@@ -15,7 +15,6 @@ function signup() {
     email: "",
     password: "",
     confirmPassword: "",
-    terms: false,
   };
 
   return (

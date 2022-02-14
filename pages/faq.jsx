@@ -1,15 +1,14 @@
 import React from "react";
-
 import { Header, Main, Footer } from "@components";
 
-const Home: React.FC = () => {
+function faq() {
   return (
     <div className="d-flex flex-column min-vh-100">
       <Header />
-      <Main />
+      <Main title="FAQ" />
       <Footer />
     </div>
   );
-};
+}
 
-export default Home;
+export default faq;

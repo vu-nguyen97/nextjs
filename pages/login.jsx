@@ -1,12 +1,14 @@
 import Link from "next/link";
-import React from "react";
-// import styles from "../src/styles/pages/signin.module.scss";
-
+import React, { useRef } from "react";
+import Router from "next/router";
 import { Button } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
+// import styles from "@styles/pages/signin.module.scss";
 
 function signin() {
+  const formRef = useRef(null);
+
   const schema = Yup.object().shape({
     email: Yup.string().required().email(),
     password: Yup.string().required(),
@@ -17,10 +19,16 @@ function signin() {
     password: "",
   };
 
+  const handleSubmit = () => {
+    console.log(">> Submit: ", formRef.current.values);
+    Router.push("/store");
+  };
+
   return (
     <Formik
+      innerRef={formRef}
       validationSchema={schema}
-      onSubmit={(values) => console.log("onSubmit", values)}
+      onSubmit={handleSubmit}
       initialValues={initialValues}
     >
       {({ touched, errors }) => (

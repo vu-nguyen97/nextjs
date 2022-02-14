@@ -1,0 +1,15 @@
+@import "../variables";
+
+.header {
+  font-size: 13px;
+  background-color: #2a2a2a;
+  height: 54px;
+}
+
+.logout {
+  margin-left: 2rem;
+
+  &:hover {
+    background-color: darken($primary, 3%) !important;
+  }
+}

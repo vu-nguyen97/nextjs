@@ -1,21 +1,22 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 export const Footer: React.FC = () => {
   return (
     <div className="text-center py-4" style={{ backgroundColor: "#282c34" }}>
-      <a
-        href="https://github.com/pankod"
-        target="_blank"
-        className="d-block mb-3"
-      >
-        <Image
-          src="/icons/pankod-icon.svg"
-          alt="pankod"
-          width="140"
-          height="28"
-        />
-      </a>
+      <Link href="/">
+        <div className="d-block mb-3">
+          <Image
+            src="/falcon.png"
+            className="img-contain cursor-pointer"
+            alt="falcon logo"
+            width="140"
+            height="60"
+          />
+          <div>Falcon Studio Game</div>
+        </div>
+      </Link>
 
       <ul className="d-flex justify-content-center list-unstyled p-0 m-0">
         <li className="mx-2">

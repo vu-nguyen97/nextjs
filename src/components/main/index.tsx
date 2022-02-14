@@ -3,19 +3,23 @@ import { Container } from "react-bootstrap";
 
 import { Button } from "@components";
 
-export const Main: React.FC = () => {
+interface MainProps {
+  title?: string;
+}
+
+export const Main: React.FC<MainProps> = (props) => {
   return (
-    <div className="text-center py-4" style={{ backgroundColor: "#282c34" }}>
+    <div className="text-center py-4 flex-grow-1">
       <Container>
-        <h1 className="display-2 text-white">superplate</h1>
+        <h1 className="display-2 text-white">{props?.title || "superplate"}</h1>
         <p className="lead text-white">
           The frontend boilerplate with superpowers!
         </p>
         <Button
           variant="primary"
           size="lg"
-          href="https://pankod.github.io/superplate/"
-          target="_blank"
+          // href="https://pankod.github.io/superplate/"
+          // target="_blank"
         >
           Docs
         </Button>
