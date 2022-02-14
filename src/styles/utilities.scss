@@ -1,8 +1,11 @@
 @import "./variables";
 
-body {
-  background-color: $body-bg !important;
-  color: $body-color !important;
+.bg-dark-theme {
+  background-color: $bg-dark-theme !important;
+}
+
+.text-dark-theme {
+  color: $text-dark-theme !important;
 }
 
 .formSignIn,

@@ -1,0 +1,14 @@
+@import "../variables";
+
+.sideBar {
+  width: 260px;
+  border: 1px solid $border-color;
+}
+
+.tab {
+  padding: 15px;
+
+  &:nth-child(n + 2) {
+    border-top: 1px solid $border-color;
+  }
+}

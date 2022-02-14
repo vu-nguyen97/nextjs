@@ -14,7 +14,7 @@ export const Footer: React.FC = () => {
             width="140"
             height="60"
           />
-          <div>Falcon Studio Game</div>
+          <div className="text-dark-theme">Falcon Studio Game</div>
         </div>
       </Link>
 
