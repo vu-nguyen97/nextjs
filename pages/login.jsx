@@ -1,21 +1,20 @@
-import React from "react";
 import Link from "next/link";
+import React from "react";
+// import styles from "../src/styles/pages/signin.module.scss";
+
 import { Button } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 
-function signup() {
+function signin() {
   const schema = Yup.object().shape({
     email: Yup.string().required().email(),
     password: Yup.string().required(),
-    confirmPassword: Yup.string().required(),
   });
 
   const initialValues = {
     email: "",
     password: "",
-    confirmPassword: "",
-    terms: false,
   };
 
   return (
@@ -25,9 +24,9 @@ function signup() {
       initialValues={initialValues}
     >
       {({ touched, errors }) => (
-        <Form className="formSignUp d-flex justify-content-center align-items-center">
+        <Form className="formSignIn d-flex justify-content-center align-items-center">
           <div className="formWrapper shadow-lg">
-            <div className="h3 mb-3 text-center">Sign up</div>
+            <div className="h3 mb-3 text-center">Login</div>
 
             <div>
               <Field
@@ -61,40 +60,12 @@ function signup() {
               ) : null}
             </div>
 
-            <div className="mt-3">
-              <Field
-                type="password"
-                name="confirmPassword"
-                placeholder="Confirm password"
-                className={
-                  touched.confirmPassword && errors.confirmPassword
-                    ? "form-control is-invalid"
-                    : "form-control"
-                }
-              />
-              {touched.confirmPassword && errors.confirmPassword ? (
-                <div className="invalid-feedback">{errors.confirmPassword}</div>
-              ) : null}
-            </div>
-
-            <div className="d-flex align-items-center mt-2">
-              <Field type="checkbox" name="terms" className="me-2" />
-              <div className="d-flex align-items-center">
-                <label htmlFor="terms" className="font-size-14">
-                  I have read and agree to the
-                </label>
-                <span className="font-size-14 ms-1">
-                  <a href="#">terms of service</a>
-                </span>
-              </div>
-            </div>
-
             <Button variant="primary" className="w-100 mt-3" type="submit">
-              Sign up
+              Login
             </Button>
 
             <div className="my-3 text-center">-- or --</div>
-            <div className="bg-facebook w-100 mt-3 text-center">
+            <div className="bg-facebook w-100 text-center">
               <i className="bi bi-facebook"></i>
               <span className="ms-2">Facebook</span>
             </div>
@@ -104,9 +75,9 @@ function signup() {
             </div>
 
             <div className="mt-3 text-center">
-              Have already an account ?{" "}
-              <Link href="/login">
-                <a>Login here</a>
+              Haven't an account ?{" "}
+              <Link href="/signup">
+                <a>Sign up here</a>
               </Link>
             </div>
           </div>
@@ -116,4 +87,4 @@ function signup() {
   );
 }
 
-export default signup;
+export default signin;
