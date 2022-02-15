@@ -8,6 +8,19 @@
   color: $text-dark-theme !important;
 }
 
+.text-muted {
+  color: $text-muted !important;
+  font-size: 14px;
+}
+
+.border-gray {
+  border: 1px solid $gray-500;
+}
+
+.bg-gray {
+  background-color: $gray-100;
+}
+
 .formSignIn,
 .formSignUp {
   background-color: $gray-200 !important;
@@ -82,4 +95,19 @@
   &:hover {
     color: $white !important;
   }
+}
+
+.effect-arrow {
+  transition: all 0.3s ease;
+  transform: rotate(0);
+}
+
+.effect-arrow.open {
+  transform: rotate(180deg);
+}
+
+input[type="radio"].radio-lg {
+  -ms-transform: scale(1.3); /* IE 9 */
+  -webkit-transform: scale(1.3); /* Chrome, Safari, Opera */
+  transform: scale(1.3);
 }

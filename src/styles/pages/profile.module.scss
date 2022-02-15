@@ -7,8 +7,23 @@
 
 .tab {
   padding: 15px;
+  cursor: pointer;
+  opacity: 0.5;
+
+  &:hover {
+    opacity: 0.8;
+  }
 
   &:nth-child(n + 2) {
     border-top: 1px solid $border-color;
   }
+}
+
+.activedTab {
+  opacity: 1;
+}
+
+.content {
+  padding: 1.5rem 2.5rem;
+  min-height: 300px;
 }
