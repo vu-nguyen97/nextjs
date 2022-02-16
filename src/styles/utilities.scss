@@ -8,13 +8,22 @@
   color: $text-dark-theme !important;
 }
 
-.text-muted {
+.text-muted-custom {
   color: $text-muted !important;
+  font-size: 14px;
+}
+
+.text-light-custom {
+  color: $gray-700;
   font-size: 14px;
 }
 
 .border-gray {
   border: 1px solid $gray-500;
+}
+
+.border-info-custom {
+  border-color: $cyan-2 !important;
 }
 
 .bg-gray {
@@ -106,8 +115,17 @@
   transform: rotate(180deg);
 }
 
-input[type="radio"].radio-lg {
-  -ms-transform: scale(1.3); /* IE 9 */
-  -webkit-transform: scale(1.3); /* Chrome, Safari, Opera */
-  transform: scale(1.3);
+input[type="radio"] {
+  cursor: pointer;
+
+  &.radio-lg {
+    -ms-transform: scale(1.3); /* IE 9 */
+    -webkit-transform: scale(1.3); /* Chrome, Safari, Opera */
+    transform: scale(1.3);
+  }
+}
+
+.error {
+  color: $red;
+  font-size: 13px;
 }

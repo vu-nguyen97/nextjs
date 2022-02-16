@@ -1,20 +1,46 @@
-// .form-item {
-//   width: 100%;
-//   margin-top: 1rem;
-//   position: relative;
-// }
+form {
+  // .form-item {
+  //   width: 100%;
+  //   margin-top: 1rem;
+  //   // position: relative;
+  // }
 
-// .floating-label {
-//   position: absolute;
-//   pointer-events: none;
-//   font-size: 16px;
-//   left: 14px;
-//   top: 12px;
-//   transition: 0.2s ease all;
-// }
+  input,
+  input::-webkit-input-placeholder {
+    font-size: 14px;
+  }
 
-// input:focus ~ .floating-label,
-// input:not(:focus):valid ~ .floating-label {
-//   top: 6px;
-//   font-size: 11px;
-// }
+  // .form-item button,
+  // .form-item input[type="text"],
+  // .form-item input[type="email"],
+  // .form-item select {
+  //   height: 48px !important;
+  // }
+
+  .half-width {
+    width: calc(50% - 0.35rem);
+    // position: relative;
+  }
+
+  // .form-item input[type="email"],
+  // .form-item input[type="text"] {
+  //   padding-top: 18px;
+  // }
+
+  // .floating-label {
+  //   position: absolute;
+  //   pointer-events: none;
+  //   font-size: 16px;
+  //   left: 14px;
+  //   top: 12px;
+  //   transition: 0.2s ease all;
+  // }
+
+  // // input:not(:focus):valid ~ .floating-label,
+  // // input:focus ~ .floating-label {
+  // input:focus ~ .floating-label,
+  // input:not(:focus):valid ~ .floating-label {
+  //   top: 6px;
+  //   font-size: 11px;
+  // }
+}
