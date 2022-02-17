@@ -125,6 +125,18 @@ input[type="radio"] {
   }
 }
 
+.dropdown-toggle {
+  box-shadow: none !important;
+}
+
+.dropdown-item.active {
+  background-color: $blue-2 !important;
+}
+
+.dropdown-item:focus {
+  background-color: lighten($blue-2, 2%) !important;
+}
+
 .error {
   color: $red;
   font-size: 13px;

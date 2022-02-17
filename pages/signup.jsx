@@ -1,14 +1,23 @@
-import React from "react";
+import React, { useRef } from "react";
 import Link from "next/link";
 import { Button } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
+import api from "../src/services/axios.config";
+import Router from "next/router";
+import FormikControl from "src/components/form-control/FormikControl";
 
 function signup() {
+  const formRef = useRef(null);
+
   const schema = Yup.object().shape({
     email: Yup.string().required().email(),
-    password: Yup.string().required(),
-    confirmPassword: Yup.string().required(),
+    password: Yup.string().required().min(8).max(32),
+    confirmPassword: Yup.string()
+      .required("Confirm Password is a required field")
+      .min(8)
+      .max(32)
+      .oneOf([Yup.ref("password"), null], "passwords must match"),
   });
 
   const initialValues = {
@@ -17,64 +26,56 @@ function signup() {
     confirmPassword: "",
   };
 
+  const handleSubmit = (values) => {
+    api
+      .post("/auth/register", {
+        email: values.email,
+        password: values.password,
+      })
+      .then(
+        (response) => {
+          console.log("response", response);
+          Router.push("/");
+        },
+        () => {}
+      );
+  };
+
   return (
     <Formik
+      innerRef={formRef}
       validationSchema={schema}
-      onSubmit={(values) => console.log("onSubmit", values)}
+      onSubmit={(values) => handleSubmit(values)}
       initialValues={initialValues}
     >
-      {({ touched, errors }) => (
+      {(formik) => (
         <Form className="formSignUp d-flex justify-content-center align-items-center">
           <div className="formWrapper shadow-lg">
             <div className="h3 mb-3 text-center">Sign up</div>
 
-            <div>
-              <Field
-                type="text"
-                name="email"
-                placeholder="Email"
-                className={
-                  touched.email && errors.email
-                    ? "form-control is-invalid"
-                    : "form-control"
-                }
-              />
-              {touched.email && errors.email ? (
-                <div className="invalid-feedback">{errors.email}</div>
-              ) : null}
-            </div>
-
-            <div className="mt-3">
-              <Field
-                type="password"
-                name="password"
-                placeholder="Password"
-                className={
-                  touched.password && errors.password
-                    ? "form-control is-invalid"
-                    : "form-control"
-                }
-              />
-              {touched.password && errors.password ? (
-                <div className="invalid-feedback">{errors.password}</div>
-              ) : null}
-            </div>
-
-            <div className="mt-3">
-              <Field
-                type="password"
-                name="confirmPassword"
-                placeholder="Confirm password"
-                className={
-                  touched.confirmPassword && errors.confirmPassword
-                    ? "form-control is-invalid"
-                    : "form-control"
-                }
-              />
-              {touched.confirmPassword && errors.confirmPassword ? (
-                <div className="invalid-feedback">{errors.confirmPassword}</div>
-              ) : null}
-            </div>
+            <FormikControl
+              type="text"
+              control="input"
+              formik={formik}
+              name="email"
+              placeholder="Email"
+            />
+            <FormikControl
+              classNames="mt-3"
+              type="password"
+              control="input"
+              formik={formik}
+              name="password"
+              placeholder="Password"
+            />
+            <FormikControl
+              classNames="mt-3"
+              type="password"
+              control="input"
+              formik={formik}
+              name="confirmPassword"
+              placeholder="Confirm password"
+            />
 
             <div className="d-flex align-items-center mt-2">
               <Field type="checkbox" name="terms" className="me-2" />
