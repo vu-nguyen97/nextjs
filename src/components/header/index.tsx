@@ -6,7 +6,7 @@ import styles from "@styles/components/header.module.scss";
 import Link from "next/link";
 
 const NAVS = [
-  { url: "/store", name: "store" },
+  { url: "/", name: "store" },
   { url: "/faq", name: "faq" },
   { url: "/help", name: "help" },
 ];
