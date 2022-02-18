@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 const service = axios.create({
   baseURL: process.env.NEXT_PUBLIC_HOST + "/api", // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000, // request timeout
+  // timeout: 5000, // request timeout
 });
 
 service.interceptors.request.use(
@@ -21,7 +21,8 @@ service.interceptors.request.use(
 // Add a response interceptor
 service.interceptors.response.use(
   function (response) {
-    if (response.data?.code === 400) {
+    const managedStatus = [400, 401];
+    if (managedStatus.includes(response.data?.code)) {
       if (response.data?.data) {
         toast(response.data?.data, { type: "error" });
       }

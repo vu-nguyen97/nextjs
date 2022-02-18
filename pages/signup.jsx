@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Link from "next/link";
 import { Button } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
@@ -6,9 +6,11 @@ import * as Yup from "yup";
 import api from "../src/services/axios.config";
 import Router from "next/router";
 import FormikControl from "src/components/form-control/FormikControl";
+import SweetAlert from "react-bootstrap-sweetalert";
 
 function signup() {
   const formRef = useRef(null);
+  const [isConfirmEmail, setIsConfirmEmail] = useState(false);
 
   const schema = Yup.object().shape({
     email: Yup.string().required().email(),
@@ -33,12 +35,14 @@ function signup() {
         password: values.password,
       })
       .then(
-        (response) => {
-          console.log("response", response);
-          Router.push("/");
-        },
+        () => setIsConfirmEmail(true),
         () => {}
       );
+  };
+
+  const onConfirmAlert = () => {
+    Router.push("https://mail.google.com/");
+    setIsConfirmEmail(false);
   };
 
   return (
@@ -110,6 +114,23 @@ function signup() {
               </Link>
             </div>
           </div>
+
+          {isConfirmEmail && (
+            <SweetAlert
+              custom
+              title="Confirm your email address"
+              customIcon="/falcon.png"
+              onConfirm={onConfirmAlert}
+              onCancel={() => setIsConfirmEmail(false)}
+              confirmBtnText="Confirm Email"
+              confirmBtnBsStyle="success"
+              confirmBtnStyle={{ boxShadow: "none" }}
+              btnSize="xs"
+            >
+              To finish signing up, please confirm your email address. This
+              ensures we have the right email in case we need to contact you.
+            </SweetAlert>
+          )}
         </Form>
       )}
     </Formik>

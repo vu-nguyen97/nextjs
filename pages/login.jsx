@@ -4,7 +4,8 @@ import Router from "next/router";
 import { Button } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-// import styles from "@styles/pages/signin.module.scss";
+import api from "../src/services/axios.config";
+import { TOKEN } from "../src/components/constants";
 
 function signin() {
   const formRef = useRef(null);
@@ -19,16 +20,28 @@ function signin() {
     password: "",
   };
 
-  const handleSubmit = () => {
-    console.log(">> Submit: ", formRef.current.values);
-    Router.push("/store");
+  const handleSubmit = (values) => {
+    api
+      .post("/auth/login", {
+        email: values.email,
+        password: values.password,
+      })
+      .then(
+        (res) => {
+          const token = res.data?.data?.token;
+
+          sessionStorage.setItem(TOKEN, token);
+          Router.push("/");
+        },
+        () => {}
+      );
   };
 
   return (
     <Formik
       innerRef={formRef}
       validationSchema={schema}
-      onSubmit={handleSubmit}
+      onSubmit={(values) => handleSubmit(values)}
       initialValues={initialValues}
     >
       {({ touched, errors }) => (
