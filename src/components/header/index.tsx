@@ -1,6 +1,7 @@
 import React from "react";
 import classNames from "classnames";
-
+import { useAppDispatch } from "@redux/store";
+import { logout } from "@redux/actions";
 import { Logo } from "@components";
 import styles from "@styles/components/header.module.scss";
 import Link from "next/link";
@@ -12,6 +13,8 @@ const NAVS = [
 ];
 
 export const Header: React.FC = () => {
+  const dispatch = useAppDispatch();
+
   return (
     <div className={styles.header}>
       <div className="d-flex justify-content-between align-items-center text-dark-theme h-100">
@@ -38,6 +41,7 @@ export const Header: React.FC = () => {
 
           <Link href="/login">
             <div
+              onClick={() => dispatch(logout())}
               className={classNames(
                 "d-flex align-items-center px-3 h-100 bg-primary text-white cursor-pointer",
                 styles.logout

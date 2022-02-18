@@ -1,5 +1,3 @@
-export const TOKEN = "token";
-
 export const REQUIRED_CONTENT = "is a required field";
 
 export const GAME_LIST = [

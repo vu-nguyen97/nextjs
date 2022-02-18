@@ -1,7 +1,8 @@
 import React from "react";
 import { Header, Main, Footer } from "@components";
+import AuthRoute from "../src/services/auth.config";
 
-const Home: React.FC = () => {
+const Home = () => {
   return (
     <div className="d-flex flex-column min-vh-100">
       <Header />
@@ -11,4 +12,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default AuthRoute(Home);

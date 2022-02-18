@@ -5,10 +5,12 @@ import { Button } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import api from "../src/services/axios.config";
-import { TOKEN } from "../src/components/constants";
+import { useAppDispatch } from "@redux/store";
+import { login } from "@redux/actions";
 
 function signin() {
   const formRef = useRef(null);
+  const dispatch = useAppDispatch();
 
   const schema = Yup.object().shape({
     email: Yup.string().required().email(),
@@ -28,9 +30,9 @@ function signin() {
       })
       .then(
         (res) => {
-          const token = res.data?.data?.token;
+          const { token, user } = res.data?.data;
 
-          sessionStorage.setItem(TOKEN, token);
+          dispatch(login({ token, user }));
           Router.push("/");
         },
         () => {}
