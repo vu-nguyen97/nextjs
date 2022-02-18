@@ -8,6 +8,7 @@ import * as Yup from "yup";
 import FormikControl from "src/components/form-control/FormikControl";
 import { REQUIRED_CONTENT } from "src/components/constants";
 import styles from "@styles/pages/profile.module.scss";
+import AuthRoute from "../../../src/services/auth.config";
 
 function PaymentManagement() {
   const [isShowPaymentMethod, setIsShowPaymentMethod] = useState(false);
@@ -276,4 +277,4 @@ function PaymentManagement() {
   return <ProfileLayout children={childrenEl} />;
 }
 
-export default PaymentManagement;
+export default AuthRoute(PaymentManagement);

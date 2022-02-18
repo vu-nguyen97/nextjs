@@ -1,6 +1,7 @@
 import React from "react";
 import { ProfileLayout } from "@components";
 import styles from "@styles/pages/profile/general.module.scss";
+import AuthRoute from "../../src/services/auth.config";
 
 function General() {
   const childrenEl = (
@@ -17,4 +18,4 @@ function General() {
   return <ProfileLayout children={childrenEl} />;
 }
 
-export default General;
+export default AuthRoute(General);

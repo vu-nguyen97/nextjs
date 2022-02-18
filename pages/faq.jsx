@@ -1,14 +1,13 @@
 import React from "react";
-import { Header, Main, Footer } from "@components";
+import { Layout, Main } from "@components";
+import AuthRoute from "../src/services/auth.config";
 
 function faq() {
   return (
-    <div className="d-flex flex-column min-vh-100">
-      <Header />
+    <Layout>
       <Main title="FAQ" />
-      <Footer />
-    </div>
+    </Layout>
   );
 }
 
-export default faq;
+export default AuthRoute(faq);

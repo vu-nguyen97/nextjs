@@ -1,5 +1,6 @@
 import React from "react";
 import { ProfileLayout } from "@components";
+import AuthRoute from "../../../src/services/auth.config";
 
 function Comunications() {
   const childrenEl = <div>Comunications</div>;
@@ -7,4 +8,4 @@ function Comunications() {
   return <ProfileLayout children={childrenEl} />;
 }
 
-export default Comunications;
+export default AuthRoute(Comunications);

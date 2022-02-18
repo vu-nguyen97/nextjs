@@ -3,6 +3,7 @@ import { ProfileLayout } from "@components";
 import { Dropdown } from "react-bootstrap";
 import { GAME_LIST } from "../../../src/components/constants";
 import styles from "@styles/pages/profile/history.module.scss";
+import AuthRoute from "../../../src/services/auth.config";
 
 const TypeList = [
   { id: 0, name: "day", label: "By day" },
@@ -114,4 +115,4 @@ function History() {
   return <ProfileLayout children={childrenEl} />;
 }
 
-export default History;
+export default AuthRoute(History);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Header, Footer } from "@components";
+import { Layout } from "@components";
 import { Container } from "react-bootstrap";
 import styles from "@styles/pages/profile.module.scss";
 import classNames from "classnames";
@@ -33,9 +33,7 @@ export const ProfileLayout: React.FC = ({ children }: any) => {
   }, []);
 
   return (
-    <div className="d-flex flex-column min-vh-100">
-      <Header />
-
+    <Layout>
       <div className="py-4 flex-grow-1">
         <Container>
           <div className="d-flex">
@@ -68,8 +66,6 @@ export const ProfileLayout: React.FC = ({ children }: any) => {
           </div>
         </Container>
       </div>
-
-      <Footer />
-    </div>
+    </Layout>
   );
 };

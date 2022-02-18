@@ -1,14 +1,12 @@
 import React from "react";
-import { Header, Main, Footer } from "@components";
+import { Main, Layout } from "@components";
 import AuthRoute from "../src/services/auth.config";
 
 const Home = () => {
   return (
-    <div className="d-flex flex-column min-vh-100">
-      <Header />
+    <Layout>
       <Main title="Store" />
-      <Footer />
-    </div>
+    </Layout>
   );
 };
 

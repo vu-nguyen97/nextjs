@@ -1,14 +1,13 @@
 import React from "react";
-import { Header, Main, Footer } from "@components";
+import { Layout, Main } from "@components";
+import AuthRoute from "../src/services/auth.config";
 
 function help() {
   return (
-    <div className="d-flex flex-column min-vh-100">
-      <Header />
+    <Layout>
       <Main title="Help" />
-      <Footer />
-    </div>
+    </Layout>
   );
 }
 
-export default help;
+export default AuthRoute(help);
