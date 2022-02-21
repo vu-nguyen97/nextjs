@@ -33,7 +33,7 @@ export const ProfileLayout: React.FC = ({ children }: any) => {
   }, []);
 
   return (
-    <Layout>
+    <Layout isLightTheme={true}>
       <div className="py-4 flex-grow-1">
         <Container>
           <div className="d-flex">

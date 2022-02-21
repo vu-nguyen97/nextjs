@@ -8,7 +8,7 @@ interface MainProps {
 
 export const Main: React.FC<MainProps> = (props) => {
   return (
-    <div className="text-center py-4 bg-dark-theme">
+    <div className="text-center py-4">
       <Container>
         <h1 className="display-2 text-white">{props?.title || "superplate"}</h1>
         <p className="lead text-white">

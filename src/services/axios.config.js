@@ -1,4 +1,5 @@
 import axios from "axios";
+import storeInstance from "@redux/store";
 import { toast } from "react-toastify";
 
 const service = axios.create({
@@ -9,6 +10,12 @@ const service = axios.create({
 
 service.interceptors.request.use(
   function (config) {
+    const token = storeInstance.store.getState()?.account?.token || "";
+
+    if (token) {
+      config.headers["X-Authorization"] = token;
+    }
+
     // Do something before request is sent
     return config;
   },
