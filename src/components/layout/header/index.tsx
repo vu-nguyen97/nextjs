@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import classNames from "classnames";
 import { useAppDispatch } from "@redux/store";
 import { logout } from "@redux/actions";
@@ -14,16 +14,30 @@ const NAVS = [
 
 export const Header: React.FC = () => {
   const dispatch = useAppDispatch();
+  const [activedNav, setActivedNav] = useState("");
+
+  useEffect(() => {
+    const pathname = location.pathname.split("/").slice(1);
+    const activedNav = NAVS.find((nav) => nav.url === `/${pathname[0]}`);
+
+    if (activedNav) {
+      setActivedNav(activedNav.url);
+    }
+  }, []);
 
   return (
     <div className={styles.header}>
       <div className="d-flex justify-content-between align-items-center text-dark-theme h-100">
-        <div className="d-flex align-items-center">
+        <div className="d-flex align-items-center h-100">
           <Logo />
           {NAVS.map((nav, id) => (
             <Link href={nav.url} key={id}>
-              <div className="d-flex align-items-center px-3 text-uppercase nav-hover">
+              <div className="d-flex align-items-center px-3 text-uppercase nav-hover h-100 position-relative">
                 {nav.name}
+
+                {nav.url === activedNav && (
+                  <span className={styles.activedLine} />
+                )}
               </div>
             </Link>
           ))}
