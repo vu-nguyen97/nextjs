@@ -8,7 +8,12 @@ import { useRouter } from "next/router";
 
 const TABS = [
   { id: 0, url: "", name: "General", icon: "person-fill" },
-  { id: 1, url: "communications", name: "Communications", icon: "bell-fill" },
+  {
+    id: 1,
+    url: "linked-accounts",
+    name: "Linked Accounts",
+    icon: "link-45deg",
+  },
   {
     id: 2,
     url: "payment-management",

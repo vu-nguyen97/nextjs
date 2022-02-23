@@ -12,14 +12,14 @@ function Input(props) {
   const { label, name, formik, classNames, ...rest } = props;
 
   return (
-    <div>
+    <div className={classNames}>
       {label && <label htmlFor={name}>{label}</label>}
 
       <Field
         id={name}
         name={name}
         style={getStyles(formik, name)}
-        className={`form-control ${classNames}`}
+        className="form-control"
         {...rest}
       />
 
