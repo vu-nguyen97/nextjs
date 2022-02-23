@@ -12,6 +12,12 @@
   box-shadow: none !important;
 }
 
+.dropdown-item {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .dropdown-item.active {
   background-color: $blue-2 !important;
 }

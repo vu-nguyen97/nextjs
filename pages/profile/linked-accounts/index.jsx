@@ -191,6 +191,7 @@ function LinkedAccounts() {
                       key={game.id}
                       active={game.id === activedGame.id}
                       onClick={() => setActivedGame(game)}
+                      title={game.name}
                     >
                       {game.name}
                     </Dropdown.Item>

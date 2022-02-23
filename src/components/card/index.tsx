@@ -1,16 +1,22 @@
+import classNames from "classnames";
 import React from "react";
 
 interface CardProps {
   dataObj?: any;
+  className: string;
 }
 
 export const Card: React.FC<CardProps> = (props) => {
-  const { dataObj } = props;
+  const { dataObj, className } = props;
 
   return (
-    <div className="card" style={{ width: "17rem" }}>
+    <div className={classNames("card", className)} style={{ width: "17rem" }}>
       <div className="position-relative">
-        <img src="/1945.jpg" className="card-img-top" alt="card" />
+        <img
+          src={dataObj.icon || "/1945.jpg"}
+          className="card-img-top"
+          alt="card"
+        />
         <div className="card-badge badge bg-info">{dataObj.platform}</div>
       </div>
 

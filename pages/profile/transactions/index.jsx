@@ -70,6 +70,7 @@ function Transactions() {
               <Dropdown.Menu className="w-100">
                 {games.map((game) => (
                   <Dropdown.Item
+                    title={game.name}
                     key={game.id}
                     active={game.id === activedGame.id}
                     onClick={() => onClickGame(game)}
@@ -95,6 +96,7 @@ function Transactions() {
                     key={packObj.id}
                     active={packObj.id === activedPackages.id}
                     onClick={() => setActivedPackages(packObj)}
+                    title={packObj.name}
                   >
                     {packObj.name}
                   </Dropdown.Item>

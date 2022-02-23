@@ -57,6 +57,7 @@ function History() {
                   key={typeObj.id}
                   active={typeObj.id === filterdType.id}
                   onClick={() => setType(typeObj)}
+                  title={typeObj.label}
                 >
                   {typeObj.label}
                 </Dropdown.Item>
@@ -75,6 +76,7 @@ function History() {
                   active={gameObj.id === filterdGame.id}
                   key={gameObj.id}
                   onClick={() => setGame(gameObj)}
+                  title={gameObj.label}
                 >
                   {gameObj.label}
                 </Dropdown.Item>
