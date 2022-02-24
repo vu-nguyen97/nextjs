@@ -19,7 +19,7 @@ export const Card: React.FC<CardProps> = (props) => {
     >
       <div className="position-relative">
         <img
-          src={dataObj.icon || "/1945.jpg"}
+          src={dataObj.icon || "/avatar-game.jpg"}
           className="card-img-top"
           alt="card"
         />

@@ -6,9 +6,14 @@ import Image from "next/image";
 import { Button } from "react-bootstrap";
 import styles from "@styles/pages/store.module.scss";
 import classNames from "classnames";
+import { useAppDispatch } from "@redux/store";
+import { addOrder } from "@redux/actions";
+import { toast } from "react-toastify";
 
 function DetailGame() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+
   const [gameInfo, setGame] = useState({
     icon: "",
     name: "",
@@ -20,6 +25,7 @@ function DetailGame() {
     usdValue: 0,
     discountPercentage: 0,
   });
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     const { gameId } = router.query;
@@ -44,13 +50,24 @@ function DetailGame() {
     );
   }, [router]);
 
+  const addToCart = () => {
+    const params = {
+      game: gameInfo,
+      pack: activedPack,
+      quantity,
+    };
+
+    dispatch(addOrder(params));
+    toast("You just added a package to your cart", { type: "success" });
+  };
+
   return (
     <Layout>
       <div className="container my-5">
-        {gameInfo && (
+        {gameInfo.name !== "" && (
           <div className="row">
             <div className="col-8 d-flex justify-content-center">
-              <div className={classNames("position-relative", styles.gameBg)}>
+              {/* <div className="position-relative w-100">
                 {gameInfo.icon && (
                   <Image
                     loader={() => gameInfo.icon}
@@ -61,7 +78,12 @@ function DetailGame() {
                     src={gameInfo.icon}
                   />
                 )}
-              </div>
+              </div> */}
+
+              <img
+                src={gameInfo.icon || "/avatar-game.jpg"}
+                className="w-100 h-100 img-contain"
+              />
             </div>
 
             <div className="col-4">
@@ -95,7 +117,11 @@ function DetailGame() {
                   <div>QUANTITY</div>
                   <select className={classNames("ms-3", styles.quantity)}>
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, id) => (
-                      <option value={item} key={id}>
+                      <option
+                        value={item}
+                        key={id}
+                        onClick={() => setQuantity(item)}
+                      >
                         {item}
                       </option>
                     ))}
@@ -104,17 +130,22 @@ function DetailGame() {
               </div>
 
               <div className="mt-4 d-flex flex-column">
-                <Button className="w-100">
-                  Buy now (
-                  <span className="h6 m-0">
-                    {activedPack.usdValue *
-                      (1 - activedPack.discountPercentage)}
-                    $
-                  </span>
-                  )
+                <Button className="mt-2">
+                  <div className="w-100 text-uppercase font-size-13">
+                    Buy now
+                    <span className="h6 m-0 ms-2">
+                      {activedPack.usdValue *
+                        (1 - activedPack.discountPercentage)}
+                      $
+                    </span>
+                  </div>
                 </Button>
 
-                <Button className="mt-3 w-100" variant="outline-dark">
+                <Button
+                  className="mt-3 w-100"
+                  variant="outline-dark"
+                  onClick={() => addToCart()}
+                >
                   Add to cart
                 </Button>
               </div>

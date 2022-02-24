@@ -44,6 +44,12 @@ export const Header: React.FC = () => {
         </div>
 
         <div className="d-flex align-items-center h-100">
+          <Link href="/cart">
+            <div className="me-3 mb-1 cursor-pointer">
+              <i className="h4 bi bi-cart-plus"></i>
+            </div>
+          </Link>
+
           <Link href="/profile">
             <div className="nav-hover d-flex align-items-center cursor-pointer">
               <i className="h4 m-0 bi bi-person"></i>

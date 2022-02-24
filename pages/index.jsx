@@ -32,7 +32,7 @@ const Home = () => {
       <div className="main-page py-5">
         {games.length !== 0 && (
           <div className="container">
-            <div className="h5 text-white">List game</div>
+            <div className="h5">List game</div>
 
             <div className="d-flex flex-wrap">
               {games.map((game, id) => (
