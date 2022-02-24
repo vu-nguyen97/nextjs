@@ -17,7 +17,7 @@ function Transactions() {
   useEffect(() => {
     api.get("/store/games").then(
       (res) => {
-        setGames(res.data?.data || []);
+        setGames(res?.data || []);
       },
       () => {}
     );
@@ -28,7 +28,7 @@ function Transactions() {
 
     api.get("/store/packages", { params: { gameId: game.id } }).then(
       (res) => {
-        setPackages(res.data?.data || []);
+        setPackages(res?.data || []);
       },
       () => {}
     );

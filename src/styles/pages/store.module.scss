@@ -1,0 +1,24 @@
+@import "../variables";
+
+.packValue {
+  background-color: $cyan-2;
+  color: $white;
+  opacity: 0.4;
+
+  &:hover {
+    opacity: 0.6;
+  }
+
+  &.actived {
+    opacity: 1;
+  }
+}
+
+.quantity {
+  height: 34px;
+  width: 120px;
+}
+
+.gameBg {
+  width: 800px;
+}

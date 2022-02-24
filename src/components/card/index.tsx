@@ -3,14 +3,20 @@ import React from "react";
 
 interface CardProps {
   dataObj?: any;
-  className: string;
+  className?: string;
+  description?: string;
+  onClick?: () => {};
 }
 
 export const Card: React.FC<CardProps> = (props) => {
-  const { dataObj, className } = props;
+  const { dataObj, className, description, onClick } = props;
 
   return (
-    <div className={classNames("card", className)} style={{ width: "17rem" }}>
+    <div
+      className={classNames("card", className, { "cursor-pointer": onClick })}
+      style={{ width: "15.5rem" }}
+      onClick={onClick}
+    >
       <div className="position-relative">
         <img
           src={dataObj.icon || "/1945.jpg"}
@@ -23,11 +29,7 @@ export const Card: React.FC<CardProps> = (props) => {
       <div className="card-body">
         <h5 className="card-title">{dataObj.name}</h5>
 
-        <p className="card-text">
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
-        </p>
-        <div className="btn btn-primary">Go somewhere</div>
+        <p className="card-text font-size-14">{description}</p>
       </div>
     </div>
   );

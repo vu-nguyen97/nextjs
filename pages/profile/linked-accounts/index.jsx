@@ -39,8 +39,8 @@ function LinkedAccounts() {
 
     Promise.all([onGetListGame, onGetLinkedAccounts]).then(
       (res) => {
-        setGames(res[0].data?.data || []);
-        setLinkedInfo(res[1].data?.data || []);
+        setGames(res[0]?.data || []);
+        setLinkedInfo(res[1]?.data || []);
       },
       () => {}
     );
@@ -60,8 +60,8 @@ function LinkedAccounts() {
       .then(
         (res) => {
           console.log("create-linked-accounts", res);
-          if (typeof res.data?.data === "string") {
-            toast(res.data?.data, { type: "success" });
+          if (typeof res?.data === "string") {
+            toast(res?.data, { type: "success" });
             setGameOnVerify({
               gameId: activedGame.id,
               accId: accountId,
@@ -92,7 +92,7 @@ function LinkedAccounts() {
       .then(
         (res) => {
           console.log("verify", res);
-          toast(res.data?.data, { type: "success" });
+          toast(res.data, { type: "success" });
           setTimeout(() => {
             window.location.reload();
           }, 2000);

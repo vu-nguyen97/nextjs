@@ -30,7 +30,7 @@ function signin() {
       })
       .then(
         (res) => {
-          const { token, user } = res.data?.data;
+          const { token, user } = res?.data;
 
           dispatch(login({ token, user }));
           Router.push("/");

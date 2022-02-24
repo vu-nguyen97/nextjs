@@ -10,10 +10,8 @@ export const Main: React.FC<MainProps> = (props) => {
   return (
     <div className="text-center py-4">
       <Container>
-        <h1 className="display-2 text-white">{props?.title || "superplate"}</h1>
-        <p className="lead text-white">
-          The frontend boilerplate with superpowers!
-        </p>
+        <h1 className="display-2">{props?.title || "superplate"}</h1>
+        <p className="lead">The frontend boilerplate with superpowers!</p>
         <Button
           variant="primary"
           size="lg"
