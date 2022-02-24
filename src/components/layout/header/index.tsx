@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import classNames from "classnames";
-import { useAppDispatch } from "@redux/store";
+import { RootState, useAppDispatch } from "@redux/store";
 import { logout } from "@redux/actions";
 import { Logo } from "@components";
 import styles from "@styles/components/header.module.scss";
 import Link from "next/link";
+import { useSelector } from "react-redux";
 
 const NAVS = [
   { url: "/", name: "store" },
@@ -15,6 +16,7 @@ const NAVS = [
 export const Header: React.FC = () => {
   const dispatch = useAppDispatch();
   const [activedNav, setActivedNav] = useState("");
+  const orderState = useSelector((state: RootState) => state.order.data);
 
   useEffect(() => {
     const pathname = location.pathname.split("/").slice(1);
@@ -45,8 +47,16 @@ export const Header: React.FC = () => {
 
         <div className="d-flex align-items-center h-100">
           <Link href="/cart">
-            <div className="me-3 mb-1 cursor-pointer">
-              <i className="h4 bi bi-cart-plus"></i>
+            <div className="d-flex align-items-end me-2 mb-1 cursor-pointer">
+              <div>
+                <i className="h4 bi bi-cart-plus"></i>
+              </div>
+
+              <div className={styles.notificationIcon}>
+                {orderState.length > 0 && (
+                  <div className={classNames("ms-1 mb-1", styles.dot)} />
+                )}
+              </div>
             </div>
           </Link>
 

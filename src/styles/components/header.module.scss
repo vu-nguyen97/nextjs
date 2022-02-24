@@ -23,3 +23,14 @@
     background-color: darken($primary, 3%) !important;
   }
 }
+
+.notificationIcon {
+  width: 15px;
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    background-color: $info;
+    border-radius: 50%;
+  }
+}
