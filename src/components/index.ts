@@ -5,3 +5,4 @@ export { Button } from "./button";
 export { Card } from "./card";
 export { ProfileLayout } from "./profile/layout";
 export { PaymentMethod } from "./payment-method";
+export { ModalInfo } from "./modal/ModalInfo";
