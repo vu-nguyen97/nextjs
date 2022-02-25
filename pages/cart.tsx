@@ -1,5 +1,5 @@
-import React from "react";
-import { Button, Layout } from "@components";
+import React, { useState } from "react";
+import { Button, Layout, PaymentMethod } from "@components";
 import { useSelector } from "react-redux";
 import { RootState } from "@redux/reducers";
 import styles from "@styles/pages/cart.module.scss";
@@ -9,6 +9,8 @@ import { deleteOrder } from "@redux/actions";
 
 function cart() {
   const dispatch = useAppDispatch();
+  const [isShowPaymentMethod, setIsShowPaymentMethod] = useState(false);
+
   const orderState = useSelector((state: RootState) => state.order.data);
 
   const handleRemoveOrder = (orderId: number) => {
@@ -17,6 +19,10 @@ function cart() {
 
   const cellClassName = "d-flex align-items-center px-lg-3 p-2 h-100 w-100";
   let subTotal = 0;
+
+  const onClickBuy = () => {
+    setIsShowPaymentMethod(true);
+  };
 
   return (
     <Layout>
@@ -45,7 +51,9 @@ function cart() {
             {orderState.map((order, id) => {
               const { game, pack, quantity } = order;
               const discount =
-                pack.discountPercentage < 1 ? pack.discountPercentage : 0;
+                pack.discountPercentage > 1
+                  ? pack.discountPercentage / 100
+                  : pack.discountPercentage;
               const realPrice = pack.usdValue * (1 - discount);
               const packPrice = realPrice * quantity;
               subTotal += packPrice;
@@ -110,11 +118,23 @@ function cart() {
                   </div>
                 </div>
 
-                <Button className="mt-2 w-100 text-uppercase font-size-13">
+                <Button
+                  className="mt-2 w-100 text-uppercase font-size-13"
+                  onClick={onClickBuy}
+                >
                   Buy now
                 </Button>
               </div>
             </div>
+
+            <PaymentMethod
+              isOpen={isShowPaymentMethod}
+              isShowSaveCheckbox={true}
+              submitCardBtn="Buy"
+              onSubmitCreditCard={() => {
+                console.log("first");
+              }}
+            />
           </>
         )}
       </div>
