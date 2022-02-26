@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Layout } from "@components";
+import { Layout, ModalInfo } from "@components";
 import { useRouter } from "next/router";
 import api from "../../src/services/axios.config";
 import { Button } from "react-bootstrap";
 import styles from "@styles/pages/store.module.scss";
 import classNames from "classnames";
-import { useAppDispatch } from "@redux/store";
+import { RootState, useAppDispatch } from "@redux/store";
 import { addOrder } from "@redux/actions";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 function DetailGame() {
   const router = useRouter();
@@ -28,6 +29,9 @@ function DetailGame() {
   const [quantity, setQuantity] = useState(1);
   const [accInfo, setAccInfo] = useState([]);
   const [activeAccId, setActiveAccId] = useState("");
+  const [isOpenModal, setIsOpenModal] = useState(false);
+
+  const orderData = useSelector((state: RootState) => state.order.data);
 
   useEffect(() => {
     const { gameId } = router.query;
@@ -43,7 +47,7 @@ function DetailGame() {
 
     Promise.all([onGetListGame, onGetListPackage, onGetLinkedAccByName]).then(
       (res) => {
-        const activedGame = res[0].data.find((game) => game.id === gameId);
+        const activedGame = res[0].data.find((game: any) => game.id === gameId);
 
         if (activedGame) {
           setGame(activedGame);
@@ -61,6 +65,36 @@ function DetailGame() {
   }, [router]);
 
   const addToCart = () => {
+    if (orderData?.id) {
+      if (orderData.gameId !== gameInfo.id) {
+        return setIsOpenModal(true);
+      }
+
+      const newPackages = [
+        ...orderData.packages,
+        {
+          id: activedPack.id,
+          quantity,
+        },
+      ];
+
+      return api({
+        method: "put",
+        url: `store/orders/${orderData?.id}`,
+        data: {
+          // check orderData.accountId !== activeAccId
+          accountId: activeAccId,
+          packages: newPackages,
+        },
+      }).then(
+        (res) => {
+          dispatch(addOrder(res.data));
+          toast("You just added a package to your cart", { type: "success" });
+        },
+        () => {}
+      );
+    }
+
     api({
       method: "post",
       url: "store/orders",
@@ -76,15 +110,7 @@ function DetailGame() {
       },
     }).then(
       (res) => {
-        dispatch(
-          addOrder({
-            id: res.data?.id || "",
-            game: gameInfo,
-            accountId: activeAccId,
-            pack: activedPack,
-            quantity,
-          })
-        );
+        dispatch(addOrder(res.data));
         toast("You just added a package to your cart", { type: "success" });
       },
       () => {}
@@ -167,7 +193,7 @@ function DetailGame() {
               </div>
 
               <div className="mt-4 d-flex flex-column">
-                <Button className="mt-2">
+                <Button className="mt-2" disabled>
                   <div className="w-100 text-uppercase font-size-13">
                     Buy now
                     <span className="h6 m-0 ms-2">
@@ -191,6 +217,21 @@ function DetailGame() {
           </div>
         )}
       </div>
+
+      <ModalInfo isOpen={isOpenModal} onHide={() => setIsOpenModal(false)}>
+        <div>
+          <i className="h1 bi bi-exclamation-triangle text-warning"></i>
+          <div className="mt-3">
+            Please prepay for packages in your cart before adding a new game.
+          </div>
+
+          <div className="mt-3">
+            <Button size="sm" onClick={() => setIsOpenModal(false)}>
+              Ok
+            </Button>
+          </div>
+        </div>
+      </ModalInfo>
     </Layout>
   );
 }

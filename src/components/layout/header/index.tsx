@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import classNames from "classnames";
 import { RootState, useAppDispatch } from "@redux/store";
-import { logout } from "@redux/actions";
+import { addOrder, logout } from "@redux/actions";
 import { Logo } from "@components";
 import styles from "@styles/components/header.module.scss";
 import Link from "next/link";
+import api from "src/services/axios.config";
 import { useSelector } from "react-redux";
 
 const NAVS = [
@@ -16,7 +17,7 @@ const NAVS = [
 export const Header: React.FC = () => {
   const dispatch = useAppDispatch();
   const [activedNav, setActivedNav] = useState("");
-  const orderState = useSelector((state: RootState) => state.order.data);
+  const orderData = useSelector((state: RootState) => state.order.data);
 
   useEffect(() => {
     const pathname = location.pathname.split("/").slice(1);
@@ -25,6 +26,15 @@ export const Header: React.FC = () => {
     if (activedNav) {
       setActivedNav(activedNav.url);
     }
+
+    api.get("/store/current-order").then(
+      (res) => {
+        if (res.data?.id) {
+          dispatch(addOrder(res.data));
+        }
+      },
+      () => {}
+    );
   }, []);
 
   return (
@@ -53,7 +63,7 @@ export const Header: React.FC = () => {
               </div>
 
               <div className={styles.notificationIcon}>
-                {orderState.length > 0 && (
+                {orderData?.id && (
                   <div className={classNames("ms-1 mb-1", styles.dot)} />
                 )}
               </div>

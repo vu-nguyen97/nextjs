@@ -23,7 +23,9 @@ export const Card: React.FC<CardProps> = (props) => {
           className="card-img-top"
           alt="card"
         />
-        <div className="card-badge badge bg-info">{dataObj.platform}</div>
+        <div className="card-badge badge bg-info text-lowercase">
+          {dataObj.platform}
+        </div>
       </div>
 
       <div className="card-body">

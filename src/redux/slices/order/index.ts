@@ -1,35 +1,40 @@
 import { createSlice, current } from "@reduxjs/toolkit";
 
-interface OrderInfo {
+export interface Order {
   id: string;
-  game: any;
-  pack: any;
-  quantity: number;
   accountId: string;
+  gameId: string;
+  gameName: string;
+  gameIcon: string;
+  packages: Pack[];
+}
+
+interface Pack {
+  id: string;
+  usdValue: number;
+  discountPercentage: number;
+  quantity: number;
 }
 
 interface OrderState {
-  data: OrderInfo[];
+  data?: Order;
 }
 
-const initialState: OrderState = {
-  data: [],
-};
+const initialState: OrderState = {};
 
 const orderSlice = createSlice({
   name: "order",
   initialState,
   reducers: {
     addOrder: (state, { payload }) => {
-      state.data.push(payload);
+      state.data = payload;
     },
-    editOrder: (state, { payload }) => {},
-    deleteOrder: (state, { payload }) => {
-      state.data.splice(payload, 1);
+    deleteOrder: (state) => {
+      delete state.data;
     },
   },
 });
 
-export const { addOrder, editOrder, deleteOrder } = orderSlice.actions;
+export const { addOrder, deleteOrder } = orderSlice.actions;
 
 export default orderSlice.reducer;

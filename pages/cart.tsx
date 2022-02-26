@@ -1,91 +1,65 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Layout, PaymentMethod, ModalInfo } from "@components";
-import { useSelector } from "react-redux";
-import { RootState } from "@redux/reducers";
 import styles from "@styles/pages/cart.module.scss";
 import classNames from "classnames";
 import { useAppDispatch } from "@redux/store";
 import { deleteOrder } from "@redux/actions";
 import api from "src/services/axios.config";
 import Link from "next/link";
-
-interface GameInfo {
-  icon: string;
-  name: string;
-  platform: string;
-  id: string;
-}
+import { addOrder, Order } from "@redux/slices/order";
 
 function cart() {
   const dispatch = useAppDispatch();
   const [isShowPaymentMethod, setIsShowPaymentMethod] = useState(false);
-  const [gameNotLinked, setGameNotLinked] = useState<GameInfo[]>([]);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [orderData, setOrderData] = useState<Order>();
 
-  const orderState = useSelector((state: RootState) => state.order.data);
+  useEffect(() => {
+    api.get("/store/current-order").then(
+      (res) => {
+        setOrderData(res.data);
+      },
+      () => {}
+    );
+  }, []);
 
-  const handleRemoveOrder = (order: any, deletedIndex: number) => {
-    console.log("order: ", order, orderState);
+  const handleRemovePack = (pack: any) => {
+    if (orderData?.packages.length === 1) {
+      api.delete(`/store/orders/${orderData.id}`).then(
+        (res) => {
+          dispatch(deleteOrder());
+          setOrderData(res.data);
+        },
+        () => {}
+      );
+    }
+
+    const newPackages = orderData?.packages.filter(
+      (packInfo) => packInfo.id !== pack.id
+    );
 
     api({
       method: "put",
-      url: `store/orders/${order.id}`,
+      url: `store/orders/${orderData?.id}`,
       data: {
-        accountId: order.accountId,
-        packages: [
-          {
-            id: order.pack.id,
-            quantity: order.quantity,
-          },
-        ],
+        accountId: orderData?.accountId,
+        packages: newPackages,
       },
     }).then(
       (res) => {
-        console.log("res :>> ", res);
-        // dispatch(deleteOrder(deletedIndex))
+        dispatch(addOrder(res.data));
+        setOrderData(res.data);
       },
-      (err) => {
-        console.log("err", err);
-      }
+      () => {}
     );
   };
 
-  const cellClassName = "d-flex align-items-center px-lg-3 p-2 h-100 w-100";
-  let subTotal = 0;
-
   const onClickBuy = () => {
-    api
-      .get("/users/linked-accounts", {
-        params: { gameId: "" },
-      })
-      .then((res) => {
-        const listGameInOrder: any = [];
-        const gameNotLinked: any = [];
-
-        orderState.forEach((order) => {
-          const isExist = listGameInOrder.some((game: any) => {
-            return order.game.id === game.id;
-          });
-
-          if (!isExist) {
-            const linkedWithGame = res.data.find(
-              (item: any) => item.game.id === order.game.id
-            );
-
-            listGameInOrder.push(order.game);
-            if (!linkedWithGame?.linkedAccounts) {
-              gameNotLinked.push(order.game);
-            }
-          }
-        });
-
-        if (gameNotLinked.length) {
-          setIsOpenModal(true);
-          setGameNotLinked(gameNotLinked);
-        } else {
-          setIsShowPaymentMethod(true);
-        }
-      });
+    if (!orderData?.accountId) {
+      setIsOpenModal(true);
+    } else {
+      setIsShowPaymentMethod(true);
+    }
   };
 
   const onSubmitCreditCard = (data: any) => {
@@ -110,10 +84,13 @@ function cart() {
     // });
   };
 
+  const cellClassName = "d-flex align-items-center px-lg-3 p-2 h-100 w-100";
+  let subTotal = 0;
+
   return (
     <Layout>
       <div className="container my-5">
-        {orderState.length === 0 ? (
+        {!orderData?.id ? (
           <div className="text-center h5 fst-italic">
             You have no items in your cart.
           </div>
@@ -129,46 +106,47 @@ function cart() {
               <div className="col-2">
                 <div className={styles.cartHeader}>Account id</div>
               </div>
-              <div className="col-3">
+              <div className="col-2">
                 <div className={styles.cartHeader}>Quantity</div>
               </div>
-              <div className="col-2">
+              <div className="col-3">
                 <div className={styles.cartHeader}>Total</div>
               </div>
             </div>
 
-            {orderState.map((order, id) => {
-              const { game, pack, quantity, accountId } = order;
+            {orderData?.packages.map((pack) => {
+              const { accountId, gameName, gameIcon } = orderData;
+              const { quantity, usdValue, discountPercentage } = pack;
               const discount =
-                pack.discountPercentage > 1
-                  ? pack.discountPercentage / 100
-                  : pack.discountPercentage;
-              const realPrice = pack.usdValue * (1 - discount);
+                discountPercentage > 1
+                  ? discountPercentage / 100
+                  : discountPercentage;
+              const realPrice = usdValue * (1 - discount);
               const packPrice = realPrice * quantity;
               subTotal += packPrice;
 
               return (
                 <div
                   className={classNames("row g-0 border", styles.itemRow)}
-                  key={id}
+                  key={pack.id}
                 >
                   <div className="col-3">
                     <div className={cellClassName}>
                       <div className="d-flex align-items-center">
                         <img
-                          src={game.icon || "/avatar-game.jpg"}
+                          src={gameIcon || "/avatar-game.jpg"}
                           width={48}
                           height={48}
                           className="rounded"
                         />
-                        <div className="h6 m-0 ms-2">{game.name}</div>
+                        <div className="h6 m-0 ms-2">{gameName}</div>
                       </div>
                     </div>
                   </div>
 
                   <div className="col-2">
                     <div className={cellClassName}>
-                      <div>${pack.usdValue}</div>
+                      <div>${usdValue}</div>
                     </div>
                   </div>
 
@@ -184,11 +162,11 @@ function cart() {
                     </div>
                   </div>
 
-                  <div className="col-3">
+                  <div className="col-2">
                     <div className={cellClassName}>{quantity}</div>
                   </div>
 
-                  <div className="col-2">
+                  <div className="col-3">
                     <div className={cellClassName}>
                       <div className="d-flex justify-content-between w-100">
                         <div className="d-flex align-items-center">
@@ -199,7 +177,7 @@ function cart() {
                         </div>
                         <div
                           className="cursor-pointer d-flex"
-                          onClick={() => handleRemoveOrder(order, id)}
+                          onClick={() => handleRemovePack(pack)}
                         >
                           <i className="bi bi-x-lg"></i>
                         </div>
@@ -247,25 +225,18 @@ function cart() {
               <div>
                 <i className="h1 bi bi-exclamation-triangle text-warning"></i>
                 <div className="h6 mt-3">
-                  The {gameNotLinked.length > 1 ? "games" : "game"} below have
-                  not been linked to accounts:
+                  The game below have not been linked to accounts:
                 </div>
 
-                <ul className={classNames("list-group", styles.listGame)}>
-                  {gameNotLinked.map((game, id) => (
-                    <li key={id} className="list-group-item font-size-14">
-                      <div className="d-flex align-items-center justify-content-center">
-                        <img
-                          className="me-2 rounded"
-                          src={game.icon || "/avatar-game.jpg"}
-                          width={20}
-                          height={20}
-                        />
-                        {game.name}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+                <div className="d-flex align-items-center justify-content-center">
+                  <img
+                    className="me-2 rounded"
+                    src={orderData.gameIcon || "/avatar-game.jpg"}
+                    width={20}
+                    height={20}
+                  />
+                  {orderData.gameName}
+                </div>
 
                 <Link href="/profile/linked-accounts">
                   <div className="mt-3">
