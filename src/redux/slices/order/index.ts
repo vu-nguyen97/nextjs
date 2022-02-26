@@ -1,9 +1,11 @@
 import { createSlice, current } from "@reduxjs/toolkit";
 
 interface OrderInfo {
+  id: string;
   game: any;
   pack: any;
   quantity: number;
+  accountId: string;
 }
 
 interface OrderState {

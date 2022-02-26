@@ -80,8 +80,8 @@ export const PaymentMethod = ({
     }
   };
 
-  const onSubmit = () => {
-    onSubmitCreditCard();
+  const onSubmit = (values: any) => {
+    onSubmitCreditCard(values);
   };
 
   return (
@@ -91,7 +91,7 @@ export const PaymentMethod = ({
           innerRef={formRef}
           initialValues={initialValues}
           validationSchema={schema}
-          onSubmit={onSubmit}
+          onSubmit={(values) => onSubmit(values)}
         >
           {(formik) => (
             <Form>

@@ -9,16 +9,45 @@ import { deleteOrder } from "@redux/actions";
 import api from "src/services/axios.config";
 import Link from "next/link";
 
+interface GameInfo {
+  icon: string;
+  name: string;
+  platform: string;
+  id: string;
+}
+
 function cart() {
   const dispatch = useAppDispatch();
   const [isShowPaymentMethod, setIsShowPaymentMethod] = useState(false);
-  const [gameNotLinked, setGameNotLinked] = useState([]);
+  const [gameNotLinked, setGameNotLinked] = useState<GameInfo[]>([]);
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const orderState = useSelector((state: RootState) => state.order.data);
 
-  const handleRemoveOrder = (orderId: number) => {
-    dispatch(deleteOrder(orderId));
+  const handleRemoveOrder = (order: any, deletedIndex: number) => {
+    console.log("order: ", order, orderState);
+
+    api({
+      method: "put",
+      url: `store/orders/${order.id}`,
+      data: {
+        accountId: order.accountId,
+        packages: [
+          {
+            id: order.pack.id,
+            quantity: order.quantity,
+          },
+        ],
+      },
+    }).then(
+      (res) => {
+        console.log("res :>> ", res);
+        // dispatch(deleteOrder(deletedIndex))
+      },
+      (err) => {
+        console.log("err", err);
+      }
+    );
   };
 
   const cellClassName = "d-flex align-items-center px-lg-3 p-2 h-100 w-100";
@@ -43,24 +72,42 @@ function cart() {
               (item: any) => item.game.id === order.game.id
             );
 
-            listGameInOrder.push(
-              Object.assign({}, order.game, {
-                linkedAccounts: linkedWithGame?.linkedAccounts || [],
-              })
-            );
-
-            if (!linkedWithGame?.linkedAccounts) gameNotLinked.push(order.game);
+            listGameInOrder.push(order.game);
+            if (!linkedWithGame?.linkedAccounts) {
+              gameNotLinked.push(order.game);
+            }
           }
         });
 
-        setGameNotLinked(gameNotLinked);
-
         if (gameNotLinked.length) {
           setIsOpenModal(true);
+          setGameNotLinked(gameNotLinked);
         } else {
           setIsShowPaymentMethod(true);
         }
       });
+  };
+
+  const onSubmitCreditCard = (data: any) => {
+    console.log("Payment :>> ", data);
+    const { cardNumber, expiration, csc } = data;
+
+    const cardNumParam = cardNumber.split("-").join("");
+    let expirationParam = expiration.split("/").join("");
+    expirationParam =
+      expirationParam.slice(0, 2) + ":20" + expirationParam.slice(2);
+
+    const card = cardNumParam + ":" + expirationParam + ":" + csc;
+
+    // api({
+    //   method: "post",
+    //   url: "/store/purchase",
+    //   data: {
+    //     // check
+    //     orderId: orderState[0].id,
+    //     card,
+    //   },
+    // });
   };
 
   return (
@@ -73,22 +120,25 @@ function cart() {
         ) : (
           <>
             <div className="row g-0 border">
-              <div className="col-4">
+              <div className="col-3">
                 <div className={styles.cartHeader}>Game</div>
               </div>
               <div className="col-2">
                 <div className={styles.cartHeader}>Package</div>
               </div>
+              <div className="col-2">
+                <div className={styles.cartHeader}>Account id</div>
+              </div>
               <div className="col-3">
                 <div className={styles.cartHeader}>Quantity</div>
               </div>
-              <div className="col-3">
+              <div className="col-2">
                 <div className={styles.cartHeader}>Total</div>
               </div>
             </div>
 
             {orderState.map((order, id) => {
-              const { game, pack, quantity } = order;
+              const { game, pack, quantity, accountId } = order;
               const discount =
                 pack.discountPercentage > 1
                   ? pack.discountPercentage / 100
@@ -102,7 +152,7 @@ function cart() {
                   className={classNames("row g-0 border", styles.itemRow)}
                   key={id}
                 >
-                  <div className="col-4">
+                  <div className="col-3">
                     <div className={cellClassName}>
                       <div className="d-flex align-items-center">
                         <img
@@ -118,7 +168,19 @@ function cart() {
 
                   <div className="col-2">
                     <div className={cellClassName}>
-                      <div>{pack.usdValue}$</div>
+                      <div>${pack.usdValue}</div>
+                    </div>
+                  </div>
+
+                  <div className="col-2">
+                    <div className={cellClassName}>
+                      <div>
+                        {accountId || (
+                          <Link href="/profile/linked-accounts">
+                            <a className="font-size-14">Link account</a>
+                          </Link>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -126,18 +188,18 @@ function cart() {
                     <div className={cellClassName}>{quantity}</div>
                   </div>
 
-                  <div className="col-3">
+                  <div className="col-2">
                     <div className={cellClassName}>
                       <div className="d-flex justify-content-between w-100">
                         <div className="d-flex align-items-center">
-                          <div className="h6 m-0 w-price">{packPrice}$</div>
+                          <div className="h6 m-0 w-price">${packPrice}</div>
                           <div className="badge bg-info ms-2 font-size-12 w-badge">
                             -{discount * 100}%
                           </div>
                         </div>
                         <div
                           className="cursor-pointer d-flex"
-                          onClick={() => handleRemoveOrder(id)}
+                          onClick={() => handleRemoveOrder(order, id)}
                         >
                           <i className="bi bi-x-lg"></i>
                         </div>
@@ -158,7 +220,7 @@ function cart() {
                       styles.subTotal
                     )}
                   >
-                    {subTotal}$
+                    ${subTotal}
                   </div>
                 </div>
 
@@ -175,9 +237,7 @@ function cart() {
               isOpen={isShowPaymentMethod}
               isShowSaveCheckbox={true}
               submitCardBtn="Buy"
-              onSubmitCreditCard={() => {
-                console.log("first");
-              }}
+              onSubmitCreditCard={onSubmitCreditCard}
             />
 
             <ModalInfo

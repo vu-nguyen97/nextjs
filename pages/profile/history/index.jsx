@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ProfileLayout } from "@components";
 import { Dropdown } from "react-bootstrap";
 import { GAME_LIST } from "../../../src/components/constants";
 import styles from "@styles/pages/profile/history.module.scss";
 import AuthRoute from "../../../src/services/auth.config";
+import api from "src/services/axios.config";
 
 const TypeList = [
   { id: 0, name: "day", label: "By day" },
@@ -11,24 +12,19 @@ const TypeList = [
   { id: 2, name: "month", label: "By month" },
 ];
 
-const fakedData = [
-  {
-    date: "21 March, 2014",
-    content: "Lorem ipsum dolor sit amet, consectetur",
-    title: "New Web Design",
-  },
-  {
-    date: "21 March, 2014",
-    content: "Lorem ipsum dolor sit amet, consectetur",
-    title: "New Web Design",
-  },
-];
-
 function History() {
   const [filterdType, setType] = useState(TypeList[0]);
   const [filterdGame, setGame] = useState(GAME_LIST[0]);
+  const [listData, setListData] = useState(null);
 
-  const dataList = fakedData;
+  useEffect(() => {
+    api.get("/store/transactions").then(
+      (res) => {
+        setListData(res.data || []);
+      },
+      () => {}
+    );
+  }, []);
 
   const childrenEl = (
     <div>
@@ -86,25 +82,31 @@ function History() {
         </div>
       </div>
 
-      {dataList ? (
-        <div className="container mt-5 mb-5">
-          <div className="row">
-            <div className="col-md-6 offset-md-3">
-              <h4>Latest News</h4>
+      {listData?.length > 0 ? (
+        <div className="mt-5 mb-5">
+          <h5>History</h5>
 
-              <ul className={styles.timeline}>
-                {dataList.map((data, id) => (
-                  <li key={id}>
-                    <div className="h6 d-flex align-items-end">
-                      <div className="font-size-14">{data.date}:</div>
-                      <div className="ms-2">{data.title}</div>
-                    </div>
-                    <p className="font-size-14">{data.content}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+          <ul className={styles.timeline}>
+            {listData.map((data, id) => (
+              <li key={id}>
+                <div className="d-flex align-items-center">
+                  <div className="h6 m-0">{data.gameName}</div>
+
+                  <div className="ms-2 badge bg-info text-lowercase">
+                    {data.status}
+                  </div>
+                </div>
+
+                <div className="font-size-14">
+                  <div>You purchased recharge packs with ${data.subTotal}</div>
+
+                  <div>
+                    <span>Order id: </span> <span>{data.orderNumber}</span>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       ) : (
         <div className="font-size-15 my-5 text-center">

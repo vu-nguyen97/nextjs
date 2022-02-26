@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Layout } from "@components";
 import { useRouter } from "next/router";
 import api from "../../src/services/axios.config";
-import Image from "next/image";
 import { Button } from "react-bootstrap";
 import styles from "@styles/pages/store.module.scss";
 import classNames from "classnames";
@@ -15,6 +14,7 @@ function DetailGame() {
   const dispatch = useAppDispatch();
 
   const [gameInfo, setGame] = useState({
+    id: "",
     icon: "",
     name: "",
     platform: "android",
@@ -26,6 +26,8 @@ function DetailGame() {
     discountPercentage: 0,
   });
   const [quantity, setQuantity] = useState(1);
+  const [accInfo, setAccInfo] = useState([]);
+  const [activeAccId, setActiveAccId] = useState("");
 
   useEffect(() => {
     const { gameId } = router.query;
@@ -35,8 +37,11 @@ function DetailGame() {
     const onGetListPackage = api.get("/store/packages", {
       params: { gameId },
     });
+    const onGetLinkedAccByName = api.get("/users/linked-accounts", {
+      params: { gameId },
+    });
 
-    Promise.all([onGetListGame, onGetListPackage]).then(
+    Promise.all([onGetListGame, onGetListPackage, onGetLinkedAccByName]).then(
       (res) => {
         const activedGame = res[0].data.find((game) => game.id === gameId);
 
@@ -45,20 +50,45 @@ function DetailGame() {
         }
         setPacks(res[1].data || []);
         setactivedPack(res[1].data[0]);
+        setAccInfo(res[2].data?.linkedAccounts || []);
+
+        if (res[2].data?.linkedAccounts?.length === 1) {
+          setActiveAccId(res[2].data.linkedAccounts[0].id);
+        }
       },
       () => {}
     );
   }, [router]);
 
   const addToCart = () => {
-    const params = {
-      game: gameInfo,
-      pack: activedPack,
-      quantity,
-    };
-
-    dispatch(addOrder(params));
-    toast("You just added a package to your cart", { type: "success" });
+    api({
+      method: "post",
+      url: "store/orders",
+      data: {
+        gameId: gameInfo.id,
+        accountId: activeAccId,
+        packages: [
+          {
+            id: activedPack.id,
+            quantity,
+          },
+        ],
+      },
+    }).then(
+      (res) => {
+        dispatch(
+          addOrder({
+            id: res.data?.id || "",
+            game: gameInfo,
+            accountId: activeAccId,
+            pack: activedPack,
+            quantity,
+          })
+        );
+        toast("You just added a package to your cart", { type: "success" });
+      },
+      () => {}
+    );
   };
 
   return (
@@ -67,19 +97,6 @@ function DetailGame() {
         {gameInfo.name !== "" && (
           <div className="row">
             <div className="col-8 d-flex justify-content-center">
-              {/* <div className="position-relative w-100">
-                {gameInfo.icon && (
-                  <Image
-                    loader={() => gameInfo.icon}
-                    unoptimized
-                    priority
-                    layout="fill"
-                    className="img-contain"
-                    src={gameInfo.icon}
-                  />
-                )}
-              </div> */}
-
               <img
                 src={gameInfo.icon || "/avatar-game.jpg"}
                 className="w-100 h-100 img-contain"
@@ -108,25 +125,45 @@ function DetailGame() {
                       )}
                       onClick={() => setactivedPack(packObj)}
                     >
-                      {packObj.usdValue}$
+                      ${packObj.usdValue}
                     </div>
                   ))}
                 </div>
 
                 <div className="mt-2 d-flex align-items-center">
-                  <div>QUANTITY</div>
-                  <select className={classNames("ms-3", styles.quantity)}>
+                  <div className="w-50">Quantity</div>
+                  <select
+                    className={classNames("", styles.quantity)}
+                    onChange={(e) => setQuantity(Number(e.target.value))}
+                  >
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, id) => (
-                      <option
-                        value={item}
-                        key={id}
-                        onClick={() => setQuantity(item)}
-                      >
+                      <option value={item} key={id}>
                         {item}
                       </option>
                     ))}
                   </select>
                 </div>
+
+                {accInfo.length > 0 && (
+                  <div className="mt-3 d-flex align-items-center">
+                    <div className="w-50">Account id</div>
+
+                    {accInfo.length === 1 ? (
+                      <div className="">{accInfo[0].id}</div>
+                    ) : (
+                      <select
+                        className={classNames("", styles.quantity)}
+                        onChange={(e) => setActiveAccId(e.target.value)}
+                      >
+                        {accInfo.map((item, id) => (
+                          <option value={item.id} key={id}>
+                            {item}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div className="mt-4 d-flex flex-column">
@@ -134,19 +171,20 @@ function DetailGame() {
                   <div className="w-100 text-uppercase font-size-13">
                     Buy now
                     <span className="h6 m-0 ms-2">
-                      {activedPack.usdValue *
-                        (1 - activedPack.discountPercentage)}
                       $
+                      {activedPack.usdValue *
+                        quantity *
+                        (1 - activedPack.discountPercentage)}
                     </span>
                   </div>
                 </Button>
 
                 <Button
                   className="mt-3 w-100"
-                  variant="outline-dark"
+                  variant="dark"
                   onClick={() => addToCart()}
                 >
-                  Add to cart
+                  Add to Cart
                 </Button>
               </div>
             </div>

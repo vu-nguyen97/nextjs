@@ -124,9 +124,9 @@ function Transactions() {
                       {activedPackages.usdValue}$
                     </div>
                     <div className="ms-2 h6 m-0">
+                      $
                       {activedPackages.usdValue *
                         (1 - activedPackages.discountPercentage)}
-                      $
                     </div>
                   </div>
 
