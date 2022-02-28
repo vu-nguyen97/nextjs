@@ -7,11 +7,13 @@ import { deleteOrder } from "@redux/actions";
 import api from "src/services/axios.config";
 import Link from "next/link";
 import { addOrder, Order } from "@redux/slices/order";
+import { Modal } from "react-bootstrap";
 
 function cart() {
   const dispatch = useAppDispatch();
   const [isShowPaymentMethod, setIsShowPaymentMethod] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
   const [orderData, setOrderData] = useState<Order>();
 
   useEffect(() => {
@@ -63,8 +65,19 @@ function cart() {
   };
 
   const onSubmitCreditCard = (data: any) => {
-    console.log("Payment :>> ", data);
-    const { cardNumber, expiration, csc } = data;
+    const {
+      cardNumber,
+      expiration,
+      csc,
+      firstName,
+      lastName,
+      streetAddress,
+      city,
+      state,
+      postalCode,
+      country,
+      phoneNumber,
+    } = data;
 
     const cardNumParam = cardNumber.split("-").join("");
     let expirationParam = expiration.split("/").join("");
@@ -73,19 +86,60 @@ function cart() {
 
     const card = cardNumParam + ":" + expirationParam + ":" + csc;
 
-    // api({
-    //   method: "post",
-    //   url: "/store/purchase",
-    //   data: {
-    //     // check
-    //     orderId: orderState[0].id,
-    //     card,
-    //   },
-    // });
+    const paramsData = {
+      orderId: orderData.id,
+      billing: {
+        firstName,
+        lastName,
+        streetAddress,
+        city,
+        state,
+        postalCode,
+        country,
+        phoneNumber,
+      },
+      card,
+    };
+
+    api({
+      method: "post",
+      url: "/store/purchase",
+      data: paramsData,
+    }).then(
+      (res) => {
+        dispatch(deleteOrder());
+        setIsShowPaymentMethod(false);
+        console.log("Payment success", res.data);
+
+        setIsPaymentSuccess(true);
+      },
+      () => {}
+    );
   };
 
   const cellClassName = "d-flex align-items-center px-lg-3 p-2 h-100 w-100";
   let subTotal = 0;
+
+  if (isPaymentSuccess) {
+    return (
+      <Layout>
+        <div className="container my-5 text-center">
+          <i className="h1 bi bi-check-circle-fill text-success"></i>
+
+          <div className="h4 mt-3">Your payment was successfully!</div>
+          <div className="mt-2">Thank you for your billing.</div>
+
+          <Link href="/">
+            <div>
+              <Button size="sm" className="mt-3">
+                Go to store
+              </Button>
+            </div>
+          </Link>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -211,12 +265,21 @@ function cart() {
               </div>
             </div>
 
-            <PaymentMethod
-              isOpen={isShowPaymentMethod}
-              isShowSaveCheckbox={true}
-              submitCardBtn="Buy"
-              onSubmitCreditCard={onSubmitCreditCard}
-            />
+            <Modal
+              size="lg"
+              show={isShowPaymentMethod}
+              onHide={() => setIsShowPaymentMethod(false)}
+            >
+              <Modal.Body>
+                <PaymentMethod
+                  isOpen={isShowPaymentMethod}
+                  isShowSaveCheckbox={true}
+                  submitCardBtn="Buy"
+                  isSbmitOutside={true}
+                  onSubmitCreditCard={onSubmitCreditCard}
+                />
+              </Modal.Body>
+            </Modal>
 
             <ModalInfo
               isOpen={isOpenModal}

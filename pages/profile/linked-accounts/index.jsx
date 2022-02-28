@@ -204,7 +204,6 @@ function LinkedAccounts() {
               <FormikControl
                 type="text"
                 control="input"
-                formik={formik}
                 name="accountId"
                 placeholder="Account id"
                 classNames="w-50"

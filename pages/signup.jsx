@@ -60,7 +60,6 @@ function signup() {
             <FormikControl
               type="text"
               control="input"
-              formik={formik}
               name="email"
               placeholder="Email"
             />
@@ -68,7 +67,6 @@ function signup() {
               classNames="mt-3"
               type="password"
               control="input"
-              formik={formik}
               name="password"
               placeholder="Password"
             />
@@ -76,7 +74,6 @@ function signup() {
               classNames="mt-3"
               type="password"
               control="input"
-              formik={formik}
               name="confirmPassword"
               placeholder="Confirm password"
             />

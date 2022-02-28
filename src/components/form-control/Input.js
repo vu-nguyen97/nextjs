@@ -1,8 +1,10 @@
 import React from "react";
-import { Field, ErrorMessage } from "formik";
+import { Field, ErrorMessage, useFormikContext } from "formik";
 import TextError from "./TextError";
 
-const getStyles = (formik, name) => {
+const getStyles = (name) => {
+  const formik = useFormikContext();
+
   if (formik?.touched[name] && formik?.errors[name]) {
     return { border: "1px solid #dc3545" };
   }
@@ -18,7 +20,7 @@ function Input(props) {
       <Field
         id={name}
         name={name}
-        style={getStyles(formik, name)}
+        style={getStyles(name)}
         className="form-control"
         {...rest}
       />

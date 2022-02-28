@@ -6,6 +6,7 @@ import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import FormikControl from "src/components/form-control/FormikControl";
 import { REQUIRED_CONTENT } from "src/components/constants";
+import { BillingForm } from "@components/BillingForm";
 
 interface PaymentMethodProps {
   isOpen?: boolean;
@@ -13,6 +14,7 @@ interface PaymentMethodProps {
   isShowSaveCheckbox?: boolean;
   borderColor?: string;
   onSubmitCreditCard?: any;
+  isSbmitOutside?: boolean;
 }
 
 export const PaymentMethod = ({
@@ -21,6 +23,7 @@ export const PaymentMethod = ({
   submitCardBtn = "Save",
   isShowSaveCheckbox = false,
   borderColor = "primary",
+  isSbmitOutside = false,
 }: PaymentMethodProps) => {
   const [isShowCreditCardDetail, setIsShowCreditCardDetail] = useState(false);
   const [isShowPaypalDetail, setIsShowPaypalDetail] = useState(false);
@@ -34,18 +37,33 @@ export const PaymentMethod = ({
     cardNumber: "",
     expiration: "",
     csc: "",
+    firstName: "",
+    lastName: "",
+    streetAddress: "",
+    city: "",
+    state: "",
+    postalCode: "",
+    country: "",
+    phoneNumber: "",
   };
 
   const schema = Yup.object().shape({
     cardNumber: Yup.string().required(`card number ${REQUIRED_CONTENT}`),
     expiration: Yup.string().required(`card number ${REQUIRED_CONTENT}`),
     csc: Yup.string().required(),
+    firstName: Yup.string().required(),
+    lastName: Yup.string().required(),
+    streetAddress: Yup.string().required(),
+    city: Yup.string().required(),
+    state: Yup.string().required(),
+    country: Yup.string().required(),
+    postalCode: Yup.string().required(),
+    phoneNumber: Yup.string().required(),
   });
 
   const onChangeCheckbox = (isChoosePaypalCB: boolean, formik: any) => {
     setIsShowCreditCardDetail(!isChoosePaypalCB);
     setIsShowPaypalDetail(isChoosePaypalCB);
-    formik?.resetForm();
   };
 
   const onChangeCardNumber = (e: any, formik: any) => {
@@ -95,6 +113,8 @@ export const PaymentMethod = ({
         >
           {(formik) => (
             <Form>
+              <BillingForm />
+
               <div className="mt-4">
                 <div className="font-size-14">CHOOSE A PAYMENT METHOD</div>
               </div>
@@ -140,7 +160,6 @@ export const PaymentMethod = ({
                           classNames="mt-3"
                           type="text"
                           control="input"
-                          formik={formik}
                           name="cardNumber"
                           placeholder="Card Number"
                           onKeyPress={(e: any) => onChangeCardNumber(e, formik)}
@@ -151,7 +170,6 @@ export const PaymentMethod = ({
                             <FormikControl
                               type="text"
                               control="input"
-                              formik={formik}
                               name="expiration"
                               placeholder="Expiration"
                               onKeyPress={(e: any) =>
@@ -164,7 +182,6 @@ export const PaymentMethod = ({
                             <FormikControl
                               type="text"
                               control="input"
-                              formik={formik}
                               name="csc"
                               placeholder="CSC"
                               onKeyPress={onChangeCSC}
@@ -189,15 +206,17 @@ export const PaymentMethod = ({
                           </div>
                         )}
 
-                        <div className="form-item d-flex justify-content-end mt-3">
-                          <Button
-                            variant={borderColor}
-                            type="submit"
-                            className="text-white"
-                          >
-                            {submitCardBtn}
-                          </Button>
-                        </div>
+                        {!isSbmitOutside && (
+                          <div className="form-item d-flex justify-content-end mt-3">
+                            <Button
+                              variant={borderColor}
+                              type="submit"
+                              className="text-white"
+                            >
+                              {submitCardBtn}
+                            </Button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
@@ -255,6 +274,20 @@ export const PaymentMethod = ({
                     </div>
                   )}
                 </div>
+
+                {isSbmitOutside && (
+                  <div className="row">
+                    <div className="col-lg-4"></div>
+
+                    <Button
+                      variant={borderColor}
+                      type="submit"
+                      className="col-lg-4 col-12 text-white mt-3"
+                    >
+                      {submitCardBtn}
+                    </Button>
+                  </div>
+                )}
               </div>
             </Form>
           )}
