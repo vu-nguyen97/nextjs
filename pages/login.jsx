@@ -87,7 +87,7 @@ function signin() {
               Login
             </Button>
 
-            <div className="my-3 text-center">-- or --</div>
+            {/* <div className="my-3 text-center">-- or --</div>
             <div className="bg-facebook w-100 text-center">
               <i className="bi bi-facebook"></i>
               <span className="ms-2">Facebook</span>
@@ -95,7 +95,7 @@ function signin() {
             <div className="bg-google w-100 mt-2 text-center">
               <i className="bi bi-google"></i>
               <span className="ms-2">Google</span>
-            </div>
+            </div> */}
 
             <div className="mt-3 text-center">
               Haven't an account ?{" "}

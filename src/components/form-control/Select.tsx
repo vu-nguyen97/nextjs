@@ -21,7 +21,6 @@ function Select(props: SelectProps) {
     optionKey,
     optionValue,
     options,
-    ...rest
   } = props;
 
   const formik = useFormikContext<any>();
@@ -29,24 +28,14 @@ function Select(props: SelectProps) {
   return (
     <div className={containerClass}>
       <Form.Select
-        {...rest}
         onChange={(e) => {
           formik.setFieldValue(name, e.target.value);
 
-          // console.log("check", formik);
-
           if (e.target.value === "defaultValue") {
-            // formik.setFieldTouched(name, true);
-            // console.log(
-            //   "onChange...",
-            //   e.target.value,
-            //   formik?.touched[name],
-            //   formik?.errors[name]
-            // );
-            // console.log("formik", formik);
+            formik.setFieldValue(name, "");
           }
         }}
-        onBlur={(e) => {
+        onBlur={() => {
           formik.setFieldTouched(name, true);
         }}
         className={classNames({
