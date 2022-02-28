@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Layout, PaymentMethod, ModalInfo } from "@components";
+import { Button, Layout, PaymentMethod, ModalInfo, Loading } from "@components";
 import styles from "@styles/pages/cart.module.scss";
 import classNames from "classnames";
 import { useAppDispatch } from "@redux/store";
@@ -11,6 +11,7 @@ import { Modal } from "react-bootstrap";
 
 function cart() {
   const dispatch = useAppDispatch();
+  const [isLoading, setIsLoading] = useState(true);
   const [isShowPaymentMethod, setIsShowPaymentMethod] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
@@ -19,20 +20,24 @@ function cart() {
   useEffect(() => {
     api.get("/store/current-order").then(
       (res: any) => {
+        setIsLoading(false);
         setOrderData(res.data);
       },
-      () => {}
+      () => setIsLoading(false)
     );
   }, []);
 
   const handleRemovePack = (pack: any) => {
+    setIsLoading(true);
+
     if (orderData?.packages.length === 1) {
       api.delete(`/store/orders/${orderData.id}`).then(
         (res: any) => {
           dispatch(deleteOrder());
           setOrderData(res.data);
+          setIsLoading(false);
         },
-        () => {}
+        () => setIsLoading(false)
       );
     }
 
@@ -51,8 +56,9 @@ function cart() {
       (res: any) => {
         dispatch(addOrder(res.data));
         setOrderData(res.data);
+        setIsLoading(false);
       },
-      () => {}
+      () => setIsLoading(false)
     );
   };
 
@@ -79,6 +85,7 @@ function cart() {
       phoneNumber,
     } = data;
 
+    setIsLoading(true);
     const cardNumParam = cardNumber.split("-").join("");
     let expirationParam = expiration.split("/").join("");
     expirationParam =
@@ -112,8 +119,9 @@ function cart() {
         console.log("Payment success", res.data);
 
         setIsPaymentSuccess(true);
+        setIsLoading(false);
       },
-      () => {}
+      () => setIsLoading(false)
     );
   };
 
@@ -144,11 +152,15 @@ function cart() {
   return (
     <Layout>
       <div className="container my-5">
-        {!orderData?.id ? (
+        {isLoading && <Loading />}
+
+        {!orderData?.id && !isLoading && (
           <div className="text-center h5 fst-italic">
             You have no items in your cart.
           </div>
-        ) : (
+        )}
+
+        {orderData?.id && (
           <>
             <div className="row g-0 border">
               <div className="col-3">

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Layout, ModalInfo } from "@components";
+import { Layout, Loading, ModalInfo } from "@components";
 import { useRouter } from "next/router";
 import api from "../../src/services/axios.config";
 import { Button } from "react-bootstrap";
@@ -14,6 +14,7 @@ function DetailGame() {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
+  const [isLoading, setIsLoading] = useState(true);
   const [gameInfo, setGame] = useState({
     id: "",
     icon: "",
@@ -49,6 +50,7 @@ function DetailGame() {
       (res) => {
         const activedGame = res[0].data.find((game: any) => game.id === gameId);
 
+        setIsLoading(false);
         if (activedGame) {
           setGame(activedGame);
         }
@@ -60,7 +62,7 @@ function DetailGame() {
           setActiveAccId(res[2].data.linkedAccounts[0].id);
         }
       },
-      () => {}
+      () => setIsLoading(false)
     );
   }, [router]);
 
@@ -78,6 +80,7 @@ function DetailGame() {
         },
       ];
 
+      setIsLoading(true);
       return api({
         method: "put",
         url: `store/orders/${orderData?.id}`,
@@ -89,12 +92,14 @@ function DetailGame() {
       }).then(
         (res) => {
           dispatch(addOrder(res.data));
+          setIsLoading(false);
           toast("You just added a package to your cart", { type: "success" });
         },
-        () => {}
+        () => setIsLoading(false)
       );
     }
 
+    setIsLoading(true);
     api({
       method: "post",
       url: "store/orders",
@@ -112,13 +117,16 @@ function DetailGame() {
       (res) => {
         dispatch(addOrder(res.data));
         toast("You just added a package to your cart", { type: "success" });
+        setIsLoading(false);
       },
-      () => {}
+      () => setIsLoading(false)
     );
   };
 
   return (
     <Layout>
+      {isLoading && <Loading />}
+
       <div className="container my-5">
         {gameInfo.name !== "" && (
           <div className="row">

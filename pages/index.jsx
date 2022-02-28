@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Layout, Card } from "@components";
+import { Layout, Card, Loading } from "@components";
 import AuthRoute from "../src/services/auth.config";
 import api from "../src/services/axios.config";
 import styles from "@styles/pages/store.module.scss";
@@ -7,14 +7,16 @@ import { useRouter } from "next/router";
 
 const Home = () => {
   const [games, setGames] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     api.get("/store/games").then(
       (res) => {
+        setIsLoading(false);
         setGames(res?.data || []);
       },
-      () => {}
+      () => setIsLoading(false)
     );
   }, []);
 
@@ -30,6 +32,8 @@ const Home = () => {
   return (
     <Layout>
       <div className="main-page py-5">
+        {isLoading && <Loading />}
+
         {games.length !== 0 && (
           <div className="container">
             <div className="h5">List game</div>
