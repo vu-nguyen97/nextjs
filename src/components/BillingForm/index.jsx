@@ -1,5 +1,6 @@
 import React from "react";
 import FormikControl from "src/components/form-control/FormikControl";
+import { getData } from "country-list";
 
 export const BillingForm = () => {
   return (
@@ -60,11 +61,14 @@ export const BillingForm = () => {
           classNames="half-width"
         />
         <FormikControl
-          type="text"
-          control="input"
+          options={getData()}
+          optionKey="name"
+          optionValue="code"
+          control="select"
           name="country"
           placeholder="Country"
-          classNames="half-width"
+          containerClass="half-width"
+          defaultOption="Select a country"
         />
       </div>
 

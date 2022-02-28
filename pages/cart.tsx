@@ -18,7 +18,7 @@ function cart() {
 
   useEffect(() => {
     api.get("/store/current-order").then(
-      (res) => {
+      (res: any) => {
         setOrderData(res.data);
       },
       () => {}
@@ -28,7 +28,7 @@ function cart() {
   const handleRemovePack = (pack: any) => {
     if (orderData?.packages.length === 1) {
       api.delete(`/store/orders/${orderData.id}`).then(
-        (res) => {
+        (res: any) => {
           dispatch(deleteOrder());
           setOrderData(res.data);
         },
@@ -48,7 +48,7 @@ function cart() {
         packages: newPackages,
       },
     }).then(
-      (res) => {
+      (res: any) => {
         dispatch(addOrder(res.data));
         setOrderData(res.data);
       },
@@ -87,7 +87,7 @@ function cart() {
     const card = cardNumParam + ":" + expirationParam + ":" + csc;
 
     const paramsData = {
-      orderId: orderData.id,
+      orderId: orderData?.id,
       billing: {
         firstName,
         lastName,
@@ -106,7 +106,7 @@ function cart() {
       url: "/store/purchase",
       data: paramsData,
     }).then(
-      (res) => {
+      (res: any) => {
         dispatch(deleteOrder());
         setIsShowPaymentMethod(false);
         console.log("Payment success", res.data);

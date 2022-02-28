@@ -49,16 +49,16 @@ export const PaymentMethod = ({
 
   const schema = Yup.object().shape({
     cardNumber: Yup.string().required(`card number ${REQUIRED_CONTENT}`),
-    expiration: Yup.string().required(`card number ${REQUIRED_CONTENT}`),
+    expiration: Yup.string().required(),
     csc: Yup.string().required(),
-    firstName: Yup.string().required(),
-    lastName: Yup.string().required(),
-    streetAddress: Yup.string().required(),
+    firstName: Yup.string().required(`First number ${REQUIRED_CONTENT}`),
+    lastName: Yup.string().required(`Last number ${REQUIRED_CONTENT}`),
+    streetAddress: Yup.string().required(`street address ${REQUIRED_CONTENT}`),
     city: Yup.string().required(),
     state: Yup.string().required(),
     country: Yup.string().required(),
-    postalCode: Yup.string().required(),
-    phoneNumber: Yup.string().required(),
+    postalCode: Yup.string().required(`postal number ${REQUIRED_CONTENT}`),
+    phoneNumber: Yup.string().required(`phone number ${REQUIRED_CONTENT}`),
   });
 
   const onChangeCheckbox = (isChoosePaypalCB: boolean, formik: any) => {

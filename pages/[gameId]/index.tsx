@@ -27,7 +27,7 @@ function DetailGame() {
     discountPercentage: 0,
   });
   const [quantity, setQuantity] = useState(1);
-  const [accInfo, setAccInfo] = useState([]);
+  const [accInfo, setAccInfo] = useState<any>([]);
   const [activeAccId, setActiveAccId] = useState("");
   const [isOpenModal, setIsOpenModal] = useState(false);
 
@@ -139,7 +139,7 @@ function DetailGame() {
                 <div>PACK</div>
 
                 <div className="d-flex">
-                  {packs.map((packObj) => (
+                  {packs.map((packObj: any) => (
                     <div
                       key={packObj.id}
                       className={classNames(
@@ -181,7 +181,7 @@ function DetailGame() {
                         className={classNames("", styles.quantity)}
                         onChange={(e) => setActiveAccId(e.target.value)}
                       >
-                        {accInfo.map((item, id) => (
+                        {accInfo.map((item: any, id: any) => (
                           <option value={item.id} key={id}>
                             {item}
                           </option>
