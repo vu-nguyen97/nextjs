@@ -39,7 +39,7 @@ function Select(props: SelectProps) {
           formik.setFieldTouched(name, true);
         }}
         className={classNames({
-          "border-danger": formik?.errors[name],
+          "border-danger": formik?.touched[name] && formik?.errors[name],
         })}
       >
         {defaultOption && <option value="defaultValue">{defaultOption}</option>}

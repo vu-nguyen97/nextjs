@@ -57,8 +57,17 @@ export const PaymentMethod = ({
     city: Yup.string().required(),
     state: Yup.string().required(),
     country: Yup.string().required(),
-    postalCode: Yup.string().required(`postal number ${REQUIRED_CONTENT}`),
-    phoneNumber: Yup.string().required(`phone number ${REQUIRED_CONTENT}`),
+    postalCode: Yup.number()
+      .typeError("Must be a number")
+      .required(`postal number ${REQUIRED_CONTENT}`),
+    phoneNumber: Yup.number()
+      .typeError("Must be a number")
+      .test(
+        "len",
+        "Must be less than 15 characters",
+        (val) => String(val).length < 15
+      )
+      .required(`phone number ${REQUIRED_CONTENT}`),
   });
 
   const onChangeCheckbox = (isChoosePaypalCB: boolean, formik: any) => {
