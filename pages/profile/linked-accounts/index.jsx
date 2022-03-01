@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ProfileLayout } from "@components";
+import { ProfileLayout, Loading } from "@components";
 import styles from "@styles/pages/profile/linked-accounts.module.scss";
 import AuthRoute from "../../../src/services/auth.config";
 import api from "../../../src/services/axios.config";
@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import OtpInput from "react-otp-input";
 
 function LinkedAccounts() {
+  const [isLoading, setIsLoading] = useState(true);
   const [games, setGames] = useState([]);
   const [activedGame, setActivedGame] = useState({});
   const [openModalVerify, setOpenModalVerify] = useState(false);
@@ -41,8 +42,9 @@ function LinkedAccounts() {
       (res) => {
         setGames(res[0]?.data || []);
         setLinkedInfo(res[1]?.data || []);
+        setIsLoading(false);
       },
-      () => {}
+      () => setIsLoading(false)
     );
   }, []);
 
@@ -106,6 +108,8 @@ function LinkedAccounts() {
 
   const childrenEl = (
     <div>
+      {isLoading && <Loading />}
+
       <h5 className="text-uppercase">Link account</h5>
 
       <div className="text-muted-custom">

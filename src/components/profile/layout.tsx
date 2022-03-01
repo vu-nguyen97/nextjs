@@ -14,12 +14,12 @@ const TABS = [
     name: "Linked Accounts",
     icon: "link-45deg",
   },
-  {
-    id: 2,
-    url: "payment-management",
-    name: "Payment management",
-    icon: "credit-card-fill",
-  },
+  // {
+  //   id: 2,
+  //   url: "payment-management",
+  //   name: "Payment management",
+  //   icon: "credit-card-fill",
+  // },
   // { id: 3, url: "transactions", name: "Transactions", icon: "bag-check-fill" },
   { id: 4, url: "history", name: "History", icon: "clock-history" },
 ];

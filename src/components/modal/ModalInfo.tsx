@@ -6,11 +6,19 @@ interface ModalProps {
   children: any;
   title?: string;
   onHide: () => void;
+  size?: any;
 }
 
-export const ModalInfo = ({ isOpen, children, title, onHide }: ModalProps) => {
+export const ModalInfo = ({
+  isOpen,
+  children,
+  title,
+  onHide,
+  size,
+  ...rest
+}: ModalProps) => {
   return (
-    <Modal centered show={isOpen} onHide={onHide}>
+    <Modal size={size} centered show={isOpen} onHide={onHide} {...rest}>
       <Modal.Body className="text-center">
         {title && <Modal.Title className="mb-3">{title}</Modal.Title>}
 

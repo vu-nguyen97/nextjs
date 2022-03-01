@@ -15,6 +15,7 @@ interface PaymentMethodProps {
   borderColor?: string;
   onSubmitCreditCard?: any;
   isSbmitOutside?: boolean;
+  isShowBillingForm?: boolean;
 }
 
 export const PaymentMethod = ({
@@ -24,6 +25,7 @@ export const PaymentMethod = ({
   isShowSaveCheckbox = false,
   borderColor = "primary",
   isSbmitOutside = false,
+  isShowBillingForm = true,
 }: PaymentMethodProps) => {
   const [isShowCreditCardDetail, setIsShowCreditCardDetail] = useState(false);
   const [isShowPaypalDetail, setIsShowPaypalDetail] = useState(false);
@@ -122,7 +124,7 @@ export const PaymentMethod = ({
         >
           {(formik) => (
             <Form>
-              <BillingForm />
+              {isShowBillingForm && <BillingForm />}
 
               <div className="mt-4">
                 <div className="font-size-14">CHOOSE A PAYMENT METHOD</div>

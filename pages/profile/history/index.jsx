@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ProfileLayout } from "@components";
+import { ProfileLayout, Loading } from "@components";
 import { Dropdown } from "react-bootstrap";
 import { GAME_LIST } from "../../../src/components/constants";
 import styles from "@styles/pages/profile/history.module.scss";
@@ -13,6 +13,7 @@ const TypeList = [
 ];
 
 function History() {
+  const [isLoading, setIsLoading] = useState(true);
   const [filterdType, setType] = useState(TypeList[0]);
   const [filterdGame, setGame] = useState(GAME_LIST[0]);
   const [listData, setListData] = useState(null);
@@ -21,13 +22,16 @@ function History() {
     api.get("/store/transactions").then(
       (res) => {
         setListData(res.data || []);
+        setIsLoading(false);
       },
-      () => {}
+      () => setIsLoading(false)
     );
   }, []);
 
   const childrenEl = (
     <div>
+      {isLoading && <Loading />}
+
       <div>
         <h5 className="text-uppercase">PURCHASE HISTORY</h5>
 
@@ -82,7 +86,7 @@ function History() {
         </div>
       </div>
 
-      {listData?.length > 0 ? (
+      {listData?.length > 0 && (
         <div className="mt-5 mb-5">
           <h5>History</h5>
 
@@ -108,7 +112,9 @@ function History() {
             ))}
           </ul>
         </div>
-      ) : (
+      )}
+
+      {!isLoading && listData?.length === 0 && (
         <div className="font-size-15 my-5 text-center">
           No charges have been made to your account yet
         </div>

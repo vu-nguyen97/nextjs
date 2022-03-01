@@ -226,15 +226,23 @@ function DetailGame() {
         )}
       </div>
 
-      <ModalInfo isOpen={isOpenModal} onHide={() => setIsOpenModal(false)}>
+      <ModalInfo
+        isOpen={isOpenModal}
+        size="sm"
+        onHide={() => setIsOpenModal(false)}
+      >
         <div>
           <i className="h1 bi bi-exclamation-triangle text-warning"></i>
           <div className="mt-3">
-            Please prepay for packages in your cart before adding a new game.
+            You can only buy packages of a game in one transaction.
           </div>
 
           <div className="mt-3">
-            <Button size="sm" onClick={() => setIsOpenModal(false)}>
+            <Button
+              size="sm"
+              onClick={() => setIsOpenModal(false)}
+              className="px-4"
+            >
               Ok
             </Button>
           </div>

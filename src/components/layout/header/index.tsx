@@ -7,17 +7,20 @@ import styles from "@styles/components/header.module.scss";
 import Link from "next/link";
 import api from "src/services/axios.config";
 import { useSelector } from "react-redux";
+import { Button } from "react-bootstrap";
 
 const NAVS = [
   { url: "/", name: "store" },
-  { url: "/faq", name: "faq" },
-  { url: "/help", name: "help" },
+  // { url: "/faq", name: "faq" },
+  // { url: "/help", name: "help" },
 ];
 
 export const Header: React.FC = () => {
   const dispatch = useAppDispatch();
   const [activedNav, setActivedNav] = useState("");
+  const [userName, setUserName] = useState("");
   const orderData = useSelector((state: RootState) => state.order.data);
+  const accountInfo = useSelector((state: RootState) => state.account.user);
 
   useEffect(() => {
     const pathname = location.pathname.split("/").slice(1);
@@ -25,6 +28,10 @@ export const Header: React.FC = () => {
 
     if (activedNav) {
       setActivedNav(activedNav.url);
+    }
+
+    if (accountInfo!.email) {
+      setUserName(accountInfo!.email);
     }
 
     api.get("/store/current-order").then(
@@ -57,7 +64,10 @@ export const Header: React.FC = () => {
 
         <div className="d-flex align-items-center h-100">
           <Link href="/cart">
-            <div className="d-flex align-items-end me-2 mb-1 cursor-pointer">
+            <div
+              className="d-flex align-items-end me-2 mb-1 cursor-pointer"
+              title="Cart"
+            >
               <div>
                 <i className="h4 bi bi-cart-plus"></i>
               </div>
@@ -71,11 +81,15 @@ export const Header: React.FC = () => {
           </Link>
 
           <Link href="/profile">
-            <div className="nav-hover d-flex align-items-center cursor-pointer">
-              <i className="h4 m-0 bi bi-person"></i>
-              <span className="text-uppercase font-size-11 ms-2">
-                vu nguyen 97
-              </span>
+            <div>
+              <Button
+                variant="success"
+                className="accountAvt rounded-circle flex-shrink-0"
+                size="sm"
+                title={userName}
+              >
+                {userName && userName[0].toUpperCase()}
+              </Button>
             </div>
           </Link>
 

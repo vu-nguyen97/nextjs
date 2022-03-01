@@ -57,7 +57,11 @@ function PaymentManagement() {
           </div>
         </div>
 
-        <PaymentMethod isOpen={isShowPaymentMethod} borderColor="info" />
+        <PaymentMethod
+          isOpen={isShowPaymentMethod}
+          isShowBillingForm={false}
+          borderColor="info"
+        />
       </div>
     </ProfileLayout>
   );
