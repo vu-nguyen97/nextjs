@@ -285,9 +285,6 @@ function cart() {
               <Modal.Body>
                 <PaymentMethod
                   isOpen={isShowPaymentMethod}
-                  isShowSaveCheckbox={true}
-                  submitCardBtn="Buy"
-                  isSbmitOutside={true}
                   onSubmitCreditCard={onSubmitCreditCard}
                 />
               </Modal.Body>
