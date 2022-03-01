@@ -27,10 +27,13 @@
 .notificationIcon {
   width: 15px;
 
-  .dot {
-    width: 6px;
-    height: 6px;
-    background-color: $info;
+  .number {
+    position: absolute;
+    top: -2px;
+    right: 6px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
+    background-color: #2a75e6;
   }
 }

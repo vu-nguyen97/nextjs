@@ -8,7 +8,7 @@ export const BillingForm = () => {
       <div className="h4 text-center text-uppercase">Payment</div>
       <div className="font-size-14 text-uppercase">Billing detail</div>
 
-      <div className="bg-gray p-3 mt-2 rounded-3 ">
+      <div className="bg-gray p-3 mt-3 rounded-3 ">
         <div className="d-flex justify-content-between">
           <FormikControl
             type="text"
@@ -69,7 +69,8 @@ export const BillingForm = () => {
             name="country"
             placeholder="Country"
             containerClass="half-width"
-            defaultOption="Select a country"
+            // defaultOption="Select a country"
+            defaultValue="US"
           />
         </div>
 

@@ -4,12 +4,11 @@ import React from "react";
 interface CardProps {
   dataObj?: any;
   className?: string;
-  description?: string;
   onClick?: () => {};
 }
 
 export const Card: React.FC<CardProps> = (props) => {
-  const { dataObj, className, description, onClick } = props;
+  const { dataObj, className, onClick } = props;
 
   return (
     <div
@@ -17,21 +16,21 @@ export const Card: React.FC<CardProps> = (props) => {
       style={{ width: "15.5rem" }}
       onClick={onClick}
     >
-      <div className="position-relative">
-        <img
-          src={dataObj.icon || "/avatar-game.jpg"}
-          className="card-img-top"
-          alt="card"
-        />
-        <div className="card-badge badge bg-info text-lowercase">
-          {dataObj.platform}
+      <div className="">
+        <div className="card-img-wrapper position-relative">
+          <img
+            src={dataObj.icon || "/avatar-game.jpg"}
+            className="card-img"
+            alt="card"
+          />
         </div>
       </div>
 
-      <div className="card-body">
-        <h5 className="card-title">{dataObj.name}</h5>
-
-        <p className="card-text font-size-14">{description}</p>
+      <div className="card-opacity-layer">
+        <h6 className="card-title m-0 card-content-hightlight">
+          {dataObj.name}
+        </h6>
+        <div className="black-layer"></div>
       </div>
     </div>
   );

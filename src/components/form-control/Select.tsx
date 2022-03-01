@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ErrorMessage, useFormikContext } from "formik";
 import TextError from "./TextError";
 import { Form } from "react-bootstrap";
@@ -11,6 +11,7 @@ interface SelectProps {
   containerClass?: string;
   options: any;
   defaultOption?: string;
+  defaultValue?: string;
 }
 
 function Select(props: SelectProps) {
@@ -21,9 +22,15 @@ function Select(props: SelectProps) {
     optionKey,
     optionValue,
     options,
+    defaultValue,
   } = props;
-
   const formik = useFormikContext<any>();
+
+  useEffect(() => {
+    if (defaultValue) {
+      formik.setFieldValue(name, defaultValue);
+    }
+  }, []);
 
   return (
     <div className={containerClass}>
@@ -41,6 +48,7 @@ function Select(props: SelectProps) {
         className={classNames({
           "border-danger": formik?.touched[name] && formik?.errors[name],
         })}
+        defaultValue={defaultValue}
       >
         {defaultOption && <option value="defaultValue">{defaultOption}</option>}
         {options.map((data: any) => (

@@ -20,11 +20,6 @@ const Home = () => {
     );
   }, []);
 
-  const fakeContent = [
-    "The game can fly - Shoot chicken - Shoot flies. The game is completely free with simple gameplay, attractive and great graphics.",
-    "Some quick example text to build on the card title and make up the bulk of the card's content.",
-  ];
-
   const onClickGame = (game) => {
     router.push(`/${game.id}`);
   };
@@ -44,7 +39,6 @@ const Home = () => {
                   <Card
                     key={id}
                     dataObj={game}
-                    description={fakeContent[id]}
                     className="h-100"
                     onClick={() => onClickGame(game)}
                   />

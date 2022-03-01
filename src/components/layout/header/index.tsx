@@ -65,16 +65,23 @@ export const Header: React.FC = () => {
         <div className="d-flex align-items-center h-100">
           <Link href="/cart">
             <div
-              className="d-flex align-items-end me-2 mb-1 cursor-pointer"
+              className="d-flex align-items-end me-2 mb-1 cursor-pointer position-relative"
               title="Cart"
             >
               <div>
-                <i className="h4 bi bi-cart-plus"></i>
+                <i className="h4 bi bi-cart2"></i>
               </div>
 
               <div className={styles.notificationIcon}>
                 {orderData?.id && (
-                  <div className={classNames("ms-1 mb-1", styles.dot)} />
+                  <div
+                    className={classNames(
+                      "text-white fw-bold font-size-12 d-flex align-items-center justify-content-center",
+                      styles.number
+                    )}
+                  >
+                    {orderData?.packages.length}
+                  </div>
                 )}
               </div>
             </div>

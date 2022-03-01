@@ -118,12 +118,12 @@ export const PaymentMethod = ({
             <Form>
               {isShowBillingForm && <BillingForm />}
 
-              <div className="mt-4">
+              <div className="mt-3">
                 <div className="font-size-14">PAYMENT METHOD</div>
               </div>
 
               <div>
-                <div className="mt-2 bg-gray rounded-3 p-3">
+                <div className="mt-3 bg-gray rounded-3 p-3">
                   <div className="d-flex align-items-center">
                     <div className="px-3 border-gray rounded-3">
                       <i className="h3 m-0 bi bi-credit-card-fill"></i>

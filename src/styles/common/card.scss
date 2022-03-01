@@ -4,3 +4,43 @@
   left: 5px;
   font-size: 11px;
 }
+
+.card-img-wrapper {
+  padding-bottom: calc(43 / 36 * 100%);
+
+  .card-img {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+}
+
+.card-opacity-layer {
+  position: relative;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 20%;
+
+  .black-layer {
+    background-color: black;
+    opacity: 0.6;
+    width: 100%;
+    height: 100%;
+  }
+
+  .card-content-hightlight {
+    color: white;
+    z-index: 10;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
