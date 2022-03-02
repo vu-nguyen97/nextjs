@@ -76,7 +76,7 @@ export const Header: React.FC = () => {
                 {orderData?.id && (
                   <div
                     className={classNames(
-                      "text-white fw-bold font-size-12 d-flex align-items-center justify-content-center",
+                      "text-white font-size-12 d-flex align-items-center justify-content-center",
                       styles.number
                     )}
                   >

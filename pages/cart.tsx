@@ -8,6 +8,7 @@ import api from "src/services/axios.config";
 import Link from "next/link";
 import { addOrder, Order } from "@redux/slices/order";
 import { Modal } from "react-bootstrap";
+import { IncAndDecButton } from "@components/common/IncAndDecButton";
 
 function cart() {
   const dispatch = useAppDispatch();
@@ -116,12 +117,43 @@ function cart() {
       (res: any) => {
         dispatch(deleteOrder());
         setIsShowPaymentMethod(false);
-        console.log("Payment success", res.data);
-
         setIsPaymentSuccess(true);
         setIsLoading(false);
       },
       () => setIsLoading(false)
+    );
+  };
+
+  const onUpdatePack = (updatedPackIndex: number, newQuantity: number) => {
+    let isUpdate = true;
+    let newPackages =
+      orderData?.packages.map((pack, packId) => {
+        if (packId !== updatedPackIndex) {
+          return pack;
+        }
+
+        if (pack.quantity === newQuantity) {
+          return (isUpdate = false);
+        }
+
+        return Object.assign({}, pack, { quantity: newQuantity });
+      }) || [];
+
+    if (!isUpdate) return;
+
+    api({
+      method: "put",
+      url: `store/orders/${orderData?.id}`,
+      data: {
+        accountId: orderData?.accountId,
+        packages: newPackages,
+      },
+    }).then(
+      (res: any) => {
+        dispatch(addOrder(res.data));
+        setOrderData(res.data);
+      },
+      () => {}
     );
   };
 
@@ -180,7 +212,7 @@ function cart() {
               </div>
             </div>
 
-            {orderData?.packages.map((pack) => {
+            {orderData?.packages.map((pack, packIndex) => {
               const { accountId, gameName, gameIcon } = orderData;
               const { quantity, usdValue, discountPercentage } = pack;
               const discount =
@@ -229,7 +261,14 @@ function cart() {
                   </div>
 
                   <div className="col-2">
-                    <div className={cellClassName}>{quantity}</div>
+                    <div className={cellClassName}>
+                      <IncAndDecButton
+                        value={quantity}
+                        onChange={(newQuantity: number) =>
+                          onUpdatePack(packIndex, newQuantity)
+                        }
+                      />
+                    </div>
                   </div>
 
                   <div className="col-3">

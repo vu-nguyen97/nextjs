@@ -1,0 +1,42 @@
+.IncAndDecButton {
+  &-input {
+    text-align: center;
+    border: none;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    width: 35px;
+    height: 30px;
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .custom-button {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ddd;
+    width: 30px;
+    height: 30px;
+    background: #eee;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  $border_radius: 3px;
+  #decrease {
+    border-radius: $border_radius 0 0 $border_radius;
+  }
+
+  #increase {
+    border-radius: 0 $border_radius $border_radius 0;
+  }
+}
