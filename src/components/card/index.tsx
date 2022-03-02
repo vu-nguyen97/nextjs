@@ -12,7 +12,9 @@ export const Card: React.FC<CardProps> = (props) => {
 
   return (
     <div
-      className={classNames("card", className, { "cursor-pointer": onClick })}
+      className={classNames("card", className, {
+        "cursor-pointer": onClick,
+      })}
       style={{ width: "15.5rem" }}
       onClick={onClick}
     >

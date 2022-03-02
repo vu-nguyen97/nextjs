@@ -7,6 +7,8 @@ import * as Yup from "yup";
 import FormikControl from "src/components/form-control/FormikControl";
 import { REQUIRED_CONTENT } from "src/components/constants";
 import { BillingForm } from "@components/BillingForm";
+import { Form as RForm } from "react-bootstrap";
+import Link from "next/link";
 
 interface PaymentMethodProps {
   isOpen?: boolean;
@@ -16,6 +18,7 @@ interface PaymentMethodProps {
   onSubmitCreditCard?: any;
   isSbmitOutside?: boolean;
   isShowBillingForm?: boolean;
+  accountId?: string;
 }
 
 export const PaymentMethod = ({
@@ -26,6 +29,7 @@ export const PaymentMethod = ({
   borderColor = "primary",
   isSbmitOutside = true,
   isShowBillingForm = true,
+  accountId = "",
 }: PaymentMethodProps) => {
   const formRef = useRef<any>(null);
 
@@ -44,6 +48,7 @@ export const PaymentMethod = ({
     postalCode: "",
     country: "",
     phoneNumber: "",
+    isAcceptAcc: false,
   };
 
   const schema = Yup.object().shape({
@@ -67,6 +72,7 @@ export const PaymentMethod = ({
         (val) => String(val).length < 15
       )
       .required(`phone number ${REQUIRED_CONTENT}`),
+    isAcceptAcc: Yup.boolean().oneOf([true]),
   });
 
   const onChangeCardNumber = (e: any, formik: any) => {
@@ -201,6 +207,45 @@ export const PaymentMethod = ({
                     </div>
                   </div>
                 </div>
+
+                {accountId && (
+                  <div className="mt-2">
+                    <div className="font-size-14 d-flex">
+                      <RForm.Group controlId="isAcceptAcc">
+                        <RForm.Check
+                          id="acceptAccCheckbox"
+                          type="checkbox"
+                          checked={formik.values.isAcceptAcc}
+                          onChange={(e) => {
+                            formik.setFieldValue(
+                              "isAcceptAcc",
+                              e.target.checked
+                            );
+                          }}
+                          isInvalid={
+                            formik.touched.isAcceptAcc &&
+                            !!formik.errors.isAcceptAcc
+                          }
+                        />
+                      </RForm.Group>
+                      <label
+                        htmlFor="acceptAccCheckbox"
+                        className={classNames("ms-2", {
+                          error:
+                            formik.touched.isAcceptAcc &&
+                            !!formik.errors.isAcceptAcc,
+                        })}
+                      >
+                        I accept payment for account id{" "}
+                        <Link href="/profile/linked-accounts">
+                          <span className="text-primary cursor-pointer">
+                            {accountId}
+                          </span>
+                        </Link>
+                      </label>
+                    </div>
+                  </div>
+                )}
 
                 {isSbmitOutside && (
                   <div className="row mt-2">

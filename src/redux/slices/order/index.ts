@@ -11,6 +11,7 @@ export interface Order {
 
 interface Pack {
   id: string;
+  icon: string;
   usdValue: number;
   discountPercentage: number;
   quantity: number;

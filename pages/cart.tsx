@@ -7,8 +7,9 @@ import { deleteOrder } from "@redux/actions";
 import api from "src/services/axios.config";
 import Link from "next/link";
 import { addOrder, Order } from "@redux/slices/order";
-import { Modal } from "react-bootstrap";
+import { Form, Modal } from "react-bootstrap";
 import { IncAndDecButton } from "@components/common/IncAndDecButton";
+import ReactTooltip from "react-tooltip";
 
 function cart() {
   const dispatch = useAppDispatch();
@@ -17,12 +18,40 @@ function cart() {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
   const [orderData, setOrderData] = useState<Order>();
+  const [linkedAccs, setLinkedAccs] = useState<any>();
+  const [activedAccId, setActivedAccId] = useState<string>();
+  const [gameWidth, setGameWidth] = useState<number>();
 
   useEffect(() => {
     api.get("/store/current-order").then(
       (res: any) => {
-        setIsLoading(false);
-        setOrderData(res.data);
+        const gameWidth = document.getElementById("GameName")?.clientWidth;
+        if (gameWidth) {
+          setGameWidth(gameWidth - 80);
+        }
+
+        api
+          .get("/users/linked-accounts", {
+            params: { gameId: res.data.gameId },
+          })
+          .then(
+            (resData) => {
+              const linkedAccList = resData.data?.linkedAccounts?.filter(
+                (acc: any) => acc.verified
+              );
+
+              if (res.data.accountId) {
+                setActivedAccId(res.data.accountId);
+              } else if (linkedAccList?.length) {
+                setActivedAccId(linkedAccList[0].id);
+              }
+
+              setLinkedAccs(linkedAccList || []);
+              setOrderData(res.data);
+              setIsLoading(false);
+            },
+            () => setIsLoading(false)
+          );
       },
       () => setIsLoading(false)
     );
@@ -157,6 +186,30 @@ function cart() {
     );
   };
 
+  const onChangeAcc = (accId: string) => {
+    setActivedAccId(accId);
+
+    if (accId === chooseAccContent) return;
+
+    setIsLoading(true);
+    api({
+      method: "put",
+      url: `store/orders/${orderData?.id}`,
+      data: {
+        accountId: accId,
+        packages: orderData?.packages,
+      },
+    }).then(
+      (res: any) => {
+        dispatch(addOrder(res.data));
+        setOrderData(res.data);
+        setIsLoading(false);
+      },
+      () => setIsLoading(false)
+    );
+  };
+
+  const chooseAccContent = "Change receiving account";
   const cellClassName = "d-flex align-items-center px-lg-3 p-2 h-100 w-100";
   let subTotal = 0;
 
@@ -186,6 +239,22 @@ function cart() {
       <div className="container my-5">
         {isLoading && <Loading />}
 
+        {linkedAccs?.length > 1 && (
+          <div className="mb-3 d-flex justify-content-end">
+            <Form.Select
+              className={styles.selectAcc}
+              onChange={(e) => onChangeAcc(e.target.value)}
+            >
+              <option>{chooseAccContent}</option>
+              {linkedAccs.map((accInfo: any, id: number) => (
+                <option key={id} value={accInfo.id}>
+                  {accInfo.id}
+                </option>
+              ))}
+            </Form.Select>
+          </div>
+        )}
+
         {!orderData?.id && !isLoading && (
           <div className="text-center h5 fst-italic">
             You have no items in your cart.
@@ -202,7 +271,23 @@ function cart() {
                 <div className={styles.cartHeader}>Package</div>
               </div>
               <div className="col-2">
-                <div className={styles.cartHeader}>Account id</div>
+                <div className={styles.cartHeader}>
+                  <div className="d-flex align-items-center">
+                    Account id
+                    <div className="px-1 mb-1">
+                      <i
+                        className="bi bi-exclamation-circle font-size-13 text-primary"
+                        data-tip="You can only select accounts that are already connected to the game."
+                      />
+                    </div>
+                  </div>
+
+                  <ReactTooltip
+                    place="top"
+                    type="info"
+                    className={styles.tooltip}
+                  />
+                </div>
               </div>
               <div className="col-2">
                 <div className={styles.cartHeader}>Quantity</div>
@@ -213,8 +298,8 @@ function cart() {
             </div>
 
             {orderData?.packages.map((pack, packIndex) => {
-              const { accountId, gameName, gameIcon } = orderData;
-              const { quantity, usdValue, discountPercentage } = pack;
+              const { accountId, gameName } = orderData;
+              const { quantity, usdValue, discountPercentage, icon } = pack;
               const discount =
                 discountPercentage > 1
                   ? discountPercentage / 100
@@ -229,15 +314,20 @@ function cart() {
                   key={pack.id}
                 >
                   <div className="col-3">
-                    <div className={cellClassName}>
+                    <div className={cellClassName} id="GameName">
                       <div className="d-flex align-items-center">
                         <img
-                          src={gameIcon || "/avatar-game.jpg"}
+                          src={icon || "/avatar-game.jpg"}
                           width={48}
                           height={48}
                           className="rounded"
                         />
-                        <div className="h6 m-0 ms-2">{gameName}</div>
+                        <div
+                          className="h6 m-0 ms-2 text-truncate-2"
+                          style={{ width: gameWidth }}
+                        >
+                          {gameName}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -284,7 +374,7 @@ function cart() {
                           className="cursor-pointer d-flex"
                           onClick={() => handleRemovePack(pack)}
                         >
-                          <i className="bi bi-x-lg"></i>
+                          <i className="bi bi-x-lg py-2 px-3"></i>
                         </div>
                       </div>
                     </div>
@@ -323,6 +413,7 @@ function cart() {
             >
               <Modal.Body>
                 <PaymentMethod
+                  accountId={activedAccId}
                   isOpen={isShowPaymentMethod}
                   onSubmitCreditCard={onSubmitCreditCard}
                 />

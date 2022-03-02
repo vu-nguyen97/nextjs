@@ -57,3 +57,13 @@ select {
 .Toastify__toast-container--top-right {
   top: $header_height;
 }
+
+.__react_component_tooltip {
+  text-align: center !important;
+  font-weight: 400 !important;
+  text-transform: lowercase;
+
+  &::first-letter {
+    text-transform: capitalize;
+  }
+}
