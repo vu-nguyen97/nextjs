@@ -12,10 +12,9 @@ export const Card: React.FC<CardProps> = (props) => {
 
   return (
     <div
-      className={classNames("card", className, {
+      className={classNames("card shadow", className, {
         "cursor-pointer": onClick,
       })}
-      style={{ width: "15.5rem" }}
       onClick={onClick}
     >
       <div className="">

@@ -9,7 +9,7 @@ export interface Order {
   packages: Pack[];
 }
 
-interface Pack {
+export interface Pack {
   id: string;
   icon: string;
   usdValue: number;

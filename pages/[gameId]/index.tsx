@@ -9,27 +9,22 @@ import { RootState, useAppDispatch } from "@redux/store";
 import { addOrder } from "@redux/actions";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import { PackagesCard } from "@components/card/PackagesCard";
+import { Pack } from "@redux/slices/order";
+
+interface Game {
+  id: string;
+  icon: string;
+  name: string;
+}
 
 function DetailGame() {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
   const [isLoading, setIsLoading] = useState(true);
-  const [gameInfo, setGame] = useState({
-    id: "",
-    icon: "",
-    name: "",
-    platform: "android",
-  });
+  const [gameInfo, setGame] = useState<Game>();
   const [packs, setPacks] = useState([]);
-  const [activedPack, setactivedPack] = useState({
-    id: "",
-    usdValue: 0,
-    discountPercentage: 0,
-  });
-  const [quantity, setQuantity] = useState(1);
-  const [accInfo, setAccInfo] = useState<any>([]);
-  const [activeAccId, setActiveAccId] = useState("");
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const orderData = useSelector((state: RootState) => state.order.data);
@@ -42,11 +37,8 @@ function DetailGame() {
     const onGetListPackage = api.get("/store/packages", {
       params: { gameId },
     });
-    const onGetLinkedAccByName = api.get("/users/linked-accounts", {
-      params: { gameId },
-    });
 
-    Promise.all([onGetListGame, onGetListPackage, onGetLinkedAccByName]).then(
+    Promise.all([onGetListGame, onGetListPackage]).then(
       (res) => {
         const activedGame = res[0].data.find((game: any) => game.id === gameId);
 
@@ -55,28 +47,22 @@ function DetailGame() {
           setGame(activedGame);
         }
         setPacks(res[1].data || []);
-        setactivedPack(res[1].data[0]);
-        setAccInfo(res[2].data?.linkedAccounts || []);
-
-        if (res[2].data?.linkedAccounts?.length === 1) {
-          setActiveAccId(res[2].data.linkedAccounts[0].id);
-        }
       },
       () => setIsLoading(false)
     );
   }, [router]);
 
-  const addToCart = () => {
+  const addToCart = (pack: Pack) => {
     if (orderData?.id) {
-      if (orderData.gameId !== gameInfo.id) {
+      if (orderData.gameId !== gameInfo?.id) {
         return setIsOpenModal(true);
       }
 
       const newPackages = [
         ...orderData.packages,
         {
-          id: activedPack.id,
-          quantity,
+          id: pack.id,
+          quantity: 1,
         },
       ];
 
@@ -85,8 +71,7 @@ function DetailGame() {
         method: "put",
         url: `store/orders/${orderData?.id}`,
         data: {
-          // check orderData.accountId !== activeAccId
-          accountId: activeAccId,
+          accountId: "",
           packages: newPackages,
         },
       }).then(
@@ -104,12 +89,12 @@ function DetailGame() {
       method: "post",
       url: "store/orders",
       data: {
-        gameId: gameInfo.id,
-        accountId: activeAccId,
+        gameId: gameInfo?.id,
+        accountId: "",
         packages: [
           {
-            id: activedPack.id,
-            quantity,
+            id: pack.id,
+            quantity: 1,
           },
         ],
       },
@@ -128,99 +113,29 @@ function DetailGame() {
       {isLoading && <Loading />}
 
       <div className="container my-5">
-        {gameInfo.name !== "" && (
-          <div className="row">
-            <div className="col-8 d-flex justify-content-center">
+        {gameInfo?.id && (
+          <div>
+            <div className="h3 text-uppercase">{gameInfo?.name}</div>
+
+            <div className="mt-4">
               <img
-                src={gameInfo.icon || "/avatar-game.jpg"}
-                className="w-100 h-100 img-contain"
+                src={gameInfo?.icon || "/avatar-game.jpg"}
+                className={classNames("w-100 h-100 img-contain", styles.game)}
               />
             </div>
 
-            <div className="col-4">
-              <div className="h5 mt-3 text-uppercase">{gameInfo.name}</div>
-              <div className="badge bg-primary text-white">
-                {gameInfo.platform}
-              </div>
-
-              <div className="mt-3">
-                <div>PACK</div>
-
-                <div className="d-flex">
-                  {packs.map((packObj: any) => (
-                    <div
-                      key={packObj.id}
-                      className={classNames(
-                        "px-2 py-1 m-2 rounded-3 cursor-pointer",
-                        styles.packValue,
-                        {
-                          [styles.actived]: activedPack.id === packObj.id,
-                        }
-                      )}
-                      onClick={() => setactivedPack(packObj)}
-                    >
-                      ${packObj.usdValue}
-                    </div>
+            <div className="mt-4">
+              {packs.length > 0 && (
+                <div className="d-flex justify-content-center flex-wrap">
+                  {packs.map((pack: Pack) => (
+                    <PackagesCard
+                      key={pack.id}
+                      dataObj={pack}
+                      onAddCart={() => addToCart(pack)}
+                    />
                   ))}
                 </div>
-
-                <div className="mt-2 d-flex align-items-center">
-                  <div className="w-50">Quantity</div>
-                  <select
-                    className={classNames("", styles.quantity)}
-                    onChange={(e) => setQuantity(Number(e.target.value))}
-                  >
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, id) => (
-                      <option value={item} key={id}>
-                        {item}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {accInfo.length > 0 && (
-                  <div className="mt-3 d-flex align-items-center">
-                    <div className="w-50">Account id</div>
-
-                    {accInfo.length === 1 ? (
-                      <div className="">{accInfo[0].id}</div>
-                    ) : (
-                      <select
-                        className={classNames("", styles.quantity)}
-                        onChange={(e) => setActiveAccId(e.target.value)}
-                      >
-                        {accInfo.map((item: any, id: any) => (
-                          <option value={item.id} key={id}>
-                            {item}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              <div className="mt-4 d-flex flex-column">
-                <Button className="mt-2" disabled>
-                  <div className="w-100 text-uppercase font-size-13">
-                    Buy now
-                    <span className="h6 m-0 ms-2">
-                      $
-                      {activedPack.usdValue *
-                        quantity *
-                        (1 - activedPack.discountPercentage)}
-                    </span>
-                  </div>
-                </Button>
-
-                <Button
-                  className="mt-3 w-100"
-                  variant="dark"
-                  onClick={() => addToCart()}
-                >
-                  Add to Cart
-                </Button>
-              </div>
+              )}
             </div>
           </div>
         )}

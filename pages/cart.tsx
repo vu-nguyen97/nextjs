@@ -285,7 +285,7 @@ function cart() {
                   <ReactTooltip
                     place="top"
                     type="info"
-                    className={styles.tooltip}
+                    className="tooltip-width"
                   />
                 </div>
               </div>

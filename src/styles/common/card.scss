@@ -1,17 +1,18 @@
 .card {
   overflow: hidden;
+  width: 15rem;
   border-radius: 0.6rem;
-}
 
-.card-badge {
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  font-size: 11px;
-}
+  .card-badge {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    font-size: 11px;
+  }
 
-.card-img-wrapper {
-  padding-bottom: calc(43 / 36 * 100%);
+  .card-img-wrapper {
+    padding-bottom: calc(43 / 33 * 100%);
+  }
 
   .card-img {
     position: absolute;
@@ -19,33 +20,57 @@
     width: 100%;
     object-fit: cover;
   }
-}
 
-.card-opacity-layer {
-  position: relative;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 20%;
-
-  .black-layer {
-    background-color: black;
-    opacity: 0.6;
-    width: 100%;
-    height: 100%;
-  }
-
-  .card-content-hightlight {
-    color: white;
-    z-index: 10;
+  .card-opacity-layer {
+    position: relative;
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    height: 20%;
+
+    .black-layer {
+      background-color: black;
+      opacity: 0.6;
+      width: 100%;
+      height: 100%;
+    }
+
+    .card-content-hightlight {
+      color: white;
+      z-index: 10;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+.PackagesCard {
+  border: 0;
+  border-radius: 0.5rem;
+  width: 16rem;
+
+  &-img {
+    padding-bottom: calc(20 / 25 * 100%);
+  }
+
+  .card-img {
+    object-position: center top;
+  }
+
+  .icon-question {
+    color: #0d32d8;
+  }
+
+  .float-icon-right {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.8rem;
   }
 }
