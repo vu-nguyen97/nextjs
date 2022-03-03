@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ProfileLayout, Loading } from "@components";
+import { ProfileLayout, Loading, ModalConfirm } from "@components";
 import styles from "@styles/pages/profile/linked-accounts.module.scss";
 import AuthRoute from "../../../src/services/auth.config";
 import api from "../../../src/services/axios.config";
@@ -22,6 +22,11 @@ function LinkedAccounts() {
     accId: "",
   });
   const [guideImgs, setGuideImgs] = useState([]);
+  const [isOpenModalConfirm, setIsOpenModalConfirm] = useState(false);
+  const [accOnDelete, setAccOnDelete] = useState({
+    gameId: "",
+    accId: "",
+  });
 
   const formRef = useRef(null);
   const schema = Yup.object().shape({
@@ -33,11 +38,11 @@ function LinkedAccounts() {
         (val) => String(val).length > 5
       )
       .required(),
-    game: Yup.string().required(),
+    gameId: Yup.string().required(),
   });
   const initialValues = {
     accountId: "",
-    game: "",
+    gameId: "",
   };
 
   useEffect(() => {
@@ -59,6 +64,7 @@ function LinkedAccounts() {
   const handleLinkAccount = (values) => {
     const { accountId, gameId } = values;
 
+    setIsLoading(true);
     api
       .post("/users/create-linked-accounts", {
         gameId,
@@ -73,9 +79,10 @@ function LinkedAccounts() {
               accId: accountId,
             });
             setOpenModalVerify(true);
+            setIsLoading(false);
           }
         },
-        () => {}
+        () => setIsLoading(false)
       );
   };
 
@@ -88,6 +95,7 @@ function LinkedAccounts() {
   };
 
   const onVerifyAcc = () => {
+    setIsLoading(true);
     api
       .post("/users/verify-linked-accounts", {
         gameId: gameOnVerify.gameId,
@@ -96,12 +104,14 @@ function LinkedAccounts() {
       })
       .then(
         (res) => {
+          setIsLoading(false);
           toast(res.data, { type: "success" });
           setTimeout(() => {
             window.location.reload();
-          }, 2000);
+          }, 1000);
         },
         () => {
+          setIsLoading(false);
           setOtp("");
           setOpenModalVerify(false);
         }
@@ -111,6 +121,26 @@ function LinkedAccounts() {
   const onChangeGame = (gameId) => {
     const activedGame = games.find((game) => game.id === gameId);
     setGuideImgs(activedGame?.guideImages || []);
+  };
+
+  const handleDeleteAcc = (gameId, accId) => {
+    setIsOpenModalConfirm(true);
+    setAccOnDelete({ gameId, accId });
+  };
+
+  const onDeleteAcc = () => {
+    setIsLoading(true);
+    api
+      .delete(
+        `/users/linked-accounts?gameId=${accOnDelete.gameId}&accountId=${accOnDelete.accId}`
+      )
+      .then(
+        () => {
+          setIsLoading(false);
+          window.location.reload();
+        },
+        () => setIsLoading(false)
+      );
   };
 
   const childrenEl = (
@@ -124,9 +154,9 @@ function LinkedAccounts() {
       </div>
 
       <div>
-        <h5 className="mt-3">Linked accounts</h5>
+        <h5 className="mt-5">Linked accounts</h5>
         <div>
-          <span className="fw-bold">Note: </span>
+          <span className="fw-bold font-size-14">Note: </span>
           <span>
             Only verified accounts can be used to create transactions.
           </span>
@@ -139,39 +169,66 @@ function LinkedAccounts() {
         )}
 
         {linkedInfo.length > 0 && (
-          <div className="ms-3 mt-2">
+          <div>
             {linkedInfo.map((linkedAcc) => {
               const { game, linkedAccounts } = linkedAcc;
 
               return (
-                <div key={game.id}>
-                  <div className="h6">{game.name}</div>
+                <div key={game.id} className="mt-3">
+                  <div
+                    className={classNames(
+                      "h6 m-0 d-flex align-items-center",
+                      styles.gameName
+                    )}
+                  >
+                    <img
+                      className="rounded-1 me-2 ms-3"
+                      src={game.icon}
+                      width="32"
+                      height="32"
+                    />
+                    <div>{game.name}</div>
+                  </div>
 
-                  <ul>
+                  <ul className="ms-2">
                     {linkedAccounts.map((acc, id) => {
                       const { verified } = acc;
 
                       return (
-                        <li key={id} className="font-size-14">
-                          <span className="fw-bold">Account Id</span>
-                          <span>: {acc.id}</span>
+                        <li
+                          key={id}
+                          className="d-flex align-items-center font-size-14 mt-3"
+                        >
+                          <div className="fw-bold">Account Id:&nbsp;</div>
+                          <div className="me-4">{acc.id}</div>
 
-                          {!verified && (
-                            <Button
-                              className="ms-3 font-size-11"
-                              variant="outline-warning"
-                              size="sm"
-                              onClick={() => {
-                                setOpenModalVerify(true);
-                                setGameOnVerify({
-                                  gameId: game.id,
-                                  accId: acc.id,
-                                });
-                              }}
-                            >
-                              Verify
-                            </Button>
-                          )}
+                          <div className={styles.btnVerify}>
+                            {!verified && (
+                              <Button
+                                className="ms-2 font-size-11"
+                                variant="warning"
+                                size="sm"
+                                onClick={() => {
+                                  setOpenModalVerify(true);
+                                  setGameOnVerify({
+                                    gameId: game.id,
+                                    accId: acc.id,
+                                  });
+                                }}
+                              >
+                                Verify
+                              </Button>
+                            )}
+                          </div>
+
+                          <Button
+                            className="ms-2 font-size-11"
+                            variant="outline-danger"
+                            size="sm"
+                            onClick={() => handleDeleteAcc(game.id, acc.id)}
+                          >
+                            Delete
+                          </Button>
                         </li>
                       );
                     })}
@@ -205,8 +262,7 @@ function LinkedAccounts() {
                   optionKey="name"
                   optionValue="id"
                   control="select"
-                  name="game"
-                  containerClass=""
+                  name="gameId"
                   defaultOption="Select a game"
                   onChange={onChangeGame}
                 />
@@ -244,7 +300,10 @@ function LinkedAccounts() {
       <Modal
         centered
         show={openModalVerify}
-        onHide={() => setOpenModalVerify(false)}
+        onHide={() => {
+          window.location.reload();
+          setOpenModalVerify(false);
+        }}
       >
         <Modal.Body className="text-center">
           <Modal.Title className="mb-3">Verify account</Modal.Title>
@@ -265,6 +324,17 @@ function LinkedAccounts() {
           </Button>
         </Modal.Body>
       </Modal>
+
+      <ModalConfirm
+        isOpen={isOpenModalConfirm}
+        onHide={() => setIsOpenModalConfirm(false)}
+        submitBtn="Delete"
+        submitSize="sm"
+        submitVariant="danger"
+        onSubmit={() => onDeleteAcc()}
+      >
+        <div>Are you sure you want to delete account {accOnDelete.accId}?</div>
+      </ModalConfirm>
     </div>
   );
 

@@ -42,7 +42,7 @@ function History() {
         <hr />
       </div>
 
-      <div className="d-flex align-items-center">
+      <div className="d-flex align-items-center d-none">
         <div>Filter:</div>
 
         <div className="ms-3">
@@ -87,7 +87,7 @@ function History() {
       </div>
 
       {listData?.length > 0 && (
-        <div className="mt-5 mb-5">
+        <div className="mt-3 mb-5">
           <h5>History</h5>
 
           <ul className={styles.timeline}>
