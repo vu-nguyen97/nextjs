@@ -8,10 +8,12 @@ function General() {
     <div>
       <h5 className="text-uppercase">Account info</h5>
 
-      <div className="d-flex justify-content-between mt-3">
-        <div className={styles.disabledInput}>Vu Nguyen</div>
+      <div className="d-flex align-items-center mt-3">
+        <div className="me-3">Email</div>
         <div className={styles.disabledInput}>vunv@falcongame.com.vn</div>
       </div>
+
+      <div className="mt-3">Change password</div>
     </div>
   );
 

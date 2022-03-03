@@ -3,17 +3,17 @@ import { ProfileLayout, Loading } from "@components";
 import styles from "@styles/pages/profile/linked-accounts.module.scss";
 import AuthRoute from "../../../src/services/auth.config";
 import api from "../../../src/services/axios.config";
-import { Button, Dropdown, Modal } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import { Formik, Form } from "formik";
 import FormikControl from "src/components/form-control/FormikControl";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import OtpInput from "react-otp-input";
+import classNames from "classnames";
 
 function LinkedAccounts() {
   const [isLoading, setIsLoading] = useState(true);
   const [games, setGames] = useState([]);
-  const [activedGame, setActivedGame] = useState({});
   const [openModalVerify, setOpenModalVerify] = useState(false);
   const [otp, setOtp] = useState("");
   const [linkedInfo, setLinkedInfo] = useState([]);
@@ -21,15 +21,23 @@ function LinkedAccounts() {
     gameId: "",
     accId: "",
   });
+  const [guideImgs, setGuideImgs] = useState([]);
 
   const formRef = useRef(null);
   const schema = Yup.object().shape({
-    accountId: Yup.string().required(),
-    gameId: Yup.string().required(),
+    accountId: Yup.number()
+      .typeError("Must be a number")
+      .test(
+        "len",
+        "Must be greater than 5 characters",
+        (val) => String(val).length > 5
+      )
+      .required(),
+    game: Yup.string().required(),
   });
   const initialValues = {
     accountId: "",
-    gameId: 1,
+    game: "",
   };
 
   useEffect(() => {
@@ -49,23 +57,19 @@ function LinkedAccounts() {
   }, []);
 
   const handleLinkAccount = (values) => {
-    // Todo: validate form
-    if (!Object.keys(activedGame).length) return;
-
-    const { accountId } = values;
+    const { accountId, gameId } = values;
 
     api
       .post("/users/create-linked-accounts", {
-        gameId: activedGame.id,
+        gameId,
         accountId,
       })
       .then(
         (res) => {
-          console.log("create-linked-accounts", res);
           if (typeof res?.data === "string") {
             toast(res?.data, { type: "success" });
             setGameOnVerify({
-              gameId: activedGame.id,
+              gameId,
               accId: accountId,
             });
             setOpenModalVerify(true);
@@ -76,10 +80,9 @@ function LinkedAccounts() {
   };
 
   const onKeyPressAccId = (e) => {
-    const currentValue = formRef.current.values.accountId;
-    const currentLength = currentValue.length;
+    const currentLength = formRef.current.values.accountId?.length;
 
-    if (e.which < 48 || e.which > 57 || currentLength >= 10) {
+    if (e.which < 48 || e.which > 57 || currentLength >= 15) {
       e.preventDefault();
     }
   };
@@ -93,7 +96,6 @@ function LinkedAccounts() {
       })
       .then(
         (res) => {
-          console.log("verify", res);
           toast(res.data, { type: "success" });
           setTimeout(() => {
             window.location.reload();
@@ -106,6 +108,11 @@ function LinkedAccounts() {
       );
   };
 
+  const onChangeGame = (gameId) => {
+    const activedGame = games.find((game) => game.id === gameId);
+    setGuideImgs(activedGame?.guideImages || []);
+  };
+
   const childrenEl = (
     <div>
       {isLoading && <Loading />}
@@ -113,14 +120,26 @@ function LinkedAccounts() {
       <h5 className="text-uppercase">Link account</h5>
 
       <div className="text-muted-custom">
-        Connect to your account in our games.
+        Connect and manage your accounts in our games.
       </div>
 
       <div>
         <h5 className="mt-3">Linked accounts</h5>
+        <div>
+          <span className="fw-bold">Note: </span>
+          <span>
+            Only verified accounts can be used to create transactions.
+          </span>
+        </div>
 
-        {linkedInfo.length !== 0 ? (
-          <div className="ms-3">
+        {!isLoading && !linkedInfo.length && (
+          <div className="font-size-15 mt-3 fst-italic text-center">
+            You have not linked any accounts yet
+          </div>
+        )}
+
+        {linkedInfo.length > 0 && (
+          <div className="ms-3 mt-2">
             {linkedInfo.map((linkedAcc) => {
               const { game, linkedAccounts } = linkedAcc;
 
@@ -131,16 +150,11 @@ function LinkedAccounts() {
                   <ul>
                     {linkedAccounts.map((acc, id) => {
                       const { verified } = acc;
-                      const slicedId = acc.id;
-                      // const slicedId =
-                      //   acc.id.length > 5
-                      //     ? acc.id.slice(0, 2) + "..." + acc.id.slice(-3)
-                      //     : acc.id;
 
                       return (
                         <li key={id} className="font-size-14">
                           <span className="fw-bold">Account Id</span>
-                          <span>: {slicedId}</span>
+                          <span>: {acc.id}</span>
 
                           {!verified && (
                             <Button
@@ -166,10 +180,6 @@ function LinkedAccounts() {
               );
             })}
           </div>
-        ) : (
-          <div className="text-muted-custom">
-            You have not linked any accounts yet
-          </div>
         )}
       </div>
 
@@ -181,43 +191,52 @@ function LinkedAccounts() {
       >
         {(formik) => (
           <Form>
-            <div className="mt-5 h6">Link a new account</div>
-
-            <div className="mt-3">
-              <Dropdown>
-                <Dropdown.Toggle variant="outline-dark" className="btn-block">
-                  {activedGame.name || "Choose game"}
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu>
-                  {games.map((game) => (
-                    <Dropdown.Item
-                      key={game.id}
-                      active={game.id === activedGame.id}
-                      onClick={() => setActivedGame(game)}
-                      title={game.name}
-                    >
-                      {game.name}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Menu>
-              </Dropdown>
+            <div className="mt-5 h5">Link a new account</div>
+            <div className="font-size-15">
+              Select the game and enter your account id. Then, you will need to
+              open the game and get the verification code in the notification
+              box to verify your account.
             </div>
 
-            <div className="mt-3 d-flex align-items-start">
-              <FormikControl
-                type="text"
-                control="input"
-                name="accountId"
-                placeholder="Account id"
-                classNames="w-50"
-                onKeyPress={(e) => onKeyPressAccId(e)}
-              />
-            </div>
+            <div className="row mt-3">
+              <div className="col-lg-4 col-md-6 col-12">
+                <FormikControl
+                  options={games}
+                  optionKey="name"
+                  optionValue="id"
+                  control="select"
+                  name="game"
+                  containerClass=""
+                  defaultOption="Select a game"
+                  onChange={onChangeGame}
+                />
 
-            <Button type="submit" className="mt-3">
-              Submit
-            </Button>
+                <FormikControl
+                  type="text"
+                  control="input"
+                  name="accountId"
+                  placeholder="Account id"
+                  classNames="mt-3"
+                  onKeyPress={(e) => onKeyPressAccId(e)}
+                />
+
+                <Button type="submit" className="mt-3">
+                  Submit
+                </Button>
+              </div>
+
+              <div className="col-lg-8 col-md-6 col-12 d-flex align-items-start justify-content-center">
+                {guideImgs.length > 0 && (
+                  <img
+                    className={classNames(
+                      "w-100 h-100 img-contain",
+                      styles.guideImg
+                    )}
+                    src={guideImgs[0]}
+                  />
+                )}
+              </div>
+            </div>
           </Form>
         )}
       </Formik>

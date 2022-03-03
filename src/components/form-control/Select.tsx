@@ -12,6 +12,7 @@ interface SelectProps {
   options: any;
   defaultOption?: string;
   defaultValue?: string;
+  onChange?: any;
 }
 
 function Select(props: SelectProps) {
@@ -23,6 +24,7 @@ function Select(props: SelectProps) {
     optionValue,
     options,
     defaultValue,
+    onChange,
   } = props;
   const formik = useFormikContext<any>();
 
@@ -41,6 +43,8 @@ function Select(props: SelectProps) {
           if (e.target.value === "defaultValue") {
             formik.setFieldValue(name, "");
           }
+
+          onChange && onChange(e.target.value);
         }}
         onBlur={() => {
           formik.setFieldTouched(name, true);

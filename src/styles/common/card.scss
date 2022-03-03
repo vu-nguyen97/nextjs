@@ -1,7 +1,7 @@
 .card {
   overflow: hidden;
   width: 15rem;
-  border-radius: 0.6rem;
+  border-radius: 0.4rem;
 
   .card-badge {
     position: absolute;
@@ -11,7 +11,7 @@
   }
 
   .card-img-wrapper {
-    padding-bottom: calc(43 / 33 * 100%);
+    padding-bottom: calc(1 / 1 * 100%);
   }
 
   .card-img {
@@ -65,7 +65,7 @@
   }
 
   .icon-question {
-    color: #0d32d8;
+    color: #1960e4;
   }
 
   .float-icon-right {

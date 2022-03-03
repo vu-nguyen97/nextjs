@@ -115,13 +115,14 @@ function DetailGame() {
       <div className="container my-5">
         {gameInfo?.id && (
           <div>
-            <div className="h3 text-uppercase">{gameInfo?.name}</div>
-
-            <div className="mt-4">
+            <div className="d-flex align-items-center">
               <img
                 src={gameInfo?.icon || "/avatar-game.jpg"}
-                className={classNames("w-100 h-100 img-contain", styles.game)}
+                className="me-2 rounded"
+                width={40}
+                height={40}
               />
+              <div className="h3 m-0 text-uppercase">{gameInfo?.name}</div>
             </div>
 
             <div className="mt-4">

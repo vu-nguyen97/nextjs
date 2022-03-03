@@ -31,7 +31,7 @@ export const PackagesCard: React.FC<PackagesCard> = (props) => {
 
         <div>
           <div data-tip={dataObj.description} className="float-icon-right">
-            <i className="h3 bi bi-question-circle-fill icon-question" />
+            <i className="h4 bi bi-question-circle-fill icon-question" />
           </div>
 
           <ReactTooltip place="top" type="info" className="tooltip-width" />

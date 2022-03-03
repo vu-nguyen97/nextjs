@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 const TABS = [
-  { id: 0, url: "", name: "General", icon: "person-fill" },
+  { id: 0, url: "", name: "Password", icon: "person-fill" },
   {
     id: 1,
     url: "linked-accounts",
