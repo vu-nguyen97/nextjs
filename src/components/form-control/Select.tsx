@@ -4,6 +4,8 @@ import TextError from "./TextError";
 import { Form } from "react-bootstrap";
 import classNames from "classnames";
 
+export const OPTION_DEFAULT = "defaultValue";
+
 interface SelectProps {
   name: string;
   optionKey: string;
@@ -40,7 +42,7 @@ function Select(props: SelectProps) {
         onChange={(e) => {
           formik.setFieldValue(name, e.target.value);
 
-          if (e.target.value === "defaultValue") {
+          if (e.target.value === OPTION_DEFAULT) {
             formik.setFieldValue(name, "");
           }
 
@@ -54,7 +56,9 @@ function Select(props: SelectProps) {
         })}
         defaultValue={defaultValue}
       >
-        {defaultOption && <option value="defaultValue">{defaultOption}</option>}
+        {defaultOption && (
+          <option value={OPTION_DEFAULT}>{defaultOption}</option>
+        )}
         {options.map((data: any) => (
           <option
             key={data[optionKey] || data.key}

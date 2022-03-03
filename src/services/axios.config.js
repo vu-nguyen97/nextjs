@@ -1,6 +1,7 @@
 import axios from "axios";
 import storeInstance from "@redux/store";
 import { toast } from "react-toastify";
+import Router from "next/router";
 
 const service = axios.create({
   baseURL: process.env.NEXT_PUBLIC_HOST + "/api", // url = base url + request url
@@ -29,9 +30,14 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   function (response) {
     const managedStatus = [400, 401];
+
     if (managedStatus.includes(response.data?.code)) {
       if (response.data?.data) {
         toast(response.data?.data, { type: "error" });
+      }
+
+      if (response.data?.code === 401) {
+        Router.push("login");
       }
 
       return Promise.reject(new Error(response.data?.message || "Error"));

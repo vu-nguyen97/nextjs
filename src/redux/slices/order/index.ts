@@ -7,6 +7,8 @@ export interface Order {
   gameName: string;
   gameIcon: string;
   packages: Pack[];
+  subTotal: number;
+  total: number;
 }
 
 export interface Pack {
