@@ -43,4 +43,10 @@ form {
   //   top: 6px;
   //   font-size: 11px;
   // }
+
+  .form-width {
+    @media (max-width: "768px") {
+      width: 250px;
+    }
+  }
 }

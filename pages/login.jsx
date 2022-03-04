@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Router from "next/router";
 import { Button } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
@@ -7,10 +7,13 @@ import * as Yup from "yup";
 import api from "../src/services/axios.config";
 import { useAppDispatch } from "@redux/store";
 import { login } from "@redux/actions";
+import { Loading } from "@components";
 
 function signin() {
   const formRef = useRef(null);
   const dispatch = useAppDispatch();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const schema = Yup.object().shape({
     email: Yup.string().required().email(),
@@ -23,6 +26,7 @@ function signin() {
   };
 
   const handleSubmit = (values) => {
+    setIsLoading(true);
     api
       .post("/auth/login", {
         email: values.email,
@@ -32,10 +36,11 @@ function signin() {
         (res) => {
           const { token, user } = res?.data;
 
+          setIsLoading(false);
           dispatch(login({ token, user }));
           Router.push("/");
         },
-        () => {}
+        () => setIsLoading(false)
       );
   };
 
@@ -48,6 +53,8 @@ function signin() {
     >
       {({ touched, errors }) => (
         <Form className="formSignIn d-flex justify-content-center align-items-center">
+          {isLoading && <Loading />}
+
           <div className="formWrapper shadow-lg">
             <div className="h3 mb-3 text-center">Login</div>
 

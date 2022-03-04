@@ -33,7 +33,7 @@ const Home = () => {
           <div className="container">
             <div className="h5">List game</div>
 
-            <div className="d-flex flex-wrap">
+            <div className="d-flex flex-wrap justify-content-center justify-content-md-start">
               {games.map((game, id) => (
                 <div key={id} className="mx-2 mt-3">
                   <Card

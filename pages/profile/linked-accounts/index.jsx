@@ -191,47 +191,48 @@ function LinkedAccounts() {
                   </div>
 
                   <ul className="ms-2">
-                    {linkedAccounts.map((acc, id) => {
-                      const { verified } = acc;
+                    {linkedAccounts.length > 0 &&
+                      linkedAccounts.map((acc, id) => {
+                        const { verified } = acc;
 
-                      return (
-                        <li
-                          key={id}
-                          className="d-flex align-items-center font-size-14 mt-3"
-                        >
-                          <div className="fw-bold">Account Id:&nbsp;</div>
-                          <div className="me-4">{acc.id}</div>
-
-                          <div className={styles.btnVerify}>
-                            {!verified && (
-                              <Button
-                                className="ms-2 font-size-11"
-                                variant="warning"
-                                size="sm"
-                                onClick={() => {
-                                  setOpenModalVerify(true);
-                                  setGameOnVerify({
-                                    gameId: game.id,
-                                    accId: acc.id,
-                                  });
-                                }}
-                              >
-                                Verify
-                              </Button>
-                            )}
-                          </div>
-
-                          <Button
-                            className="ms-2 font-size-11"
-                            variant="outline-danger"
-                            size="sm"
-                            onClick={() => handleDeleteAcc(game.id, acc.id)}
+                        return (
+                          <li
+                            key={id}
+                            className="d-flex align-items-center font-size-14 mt-3"
                           >
-                            Delete
-                          </Button>
-                        </li>
-                      );
-                    })}
+                            <div className="fw-bold">Account Id:&nbsp;</div>
+                            <div className="me-4">{acc.id}</div>
+
+                            <div className={styles.btnVerify}>
+                              {!verified && (
+                                <Button
+                                  className="ms-2 font-size-11"
+                                  variant="warning"
+                                  size="sm"
+                                  onClick={() => {
+                                    setOpenModalVerify(true);
+                                    setGameOnVerify({
+                                      gameId: game.id,
+                                      accId: acc.id,
+                                    });
+                                  }}
+                                >
+                                  Verify
+                                </Button>
+                              )}
+                            </div>
+
+                            <Button
+                              className="ms-2 font-size-11"
+                              variant="outline-danger"
+                              size="sm"
+                              onClick={() => handleDeleteAcc(game.id, acc.id)}
+                            >
+                              Delete
+                            </Button>
+                          </li>
+                        );
+                      })}
                   </ul>
                 </div>
               );

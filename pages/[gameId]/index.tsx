@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import api from "../../src/services/axios.config";
 import { Button } from "react-bootstrap";
 import styles from "@styles/pages/store.module.scss";
-import classNames from "classnames";
 import { RootState, useAppDispatch } from "@redux/store";
 import { addOrder } from "@redux/actions";
 import { toast } from "react-toastify";
@@ -125,11 +124,12 @@ function DetailGame() {
               <div className="h3 m-0 text-uppercase">{gameInfo?.name}</div>
             </div>
 
-            <div className="mt-4">
+            <div className="mt-3">
               {packs.length > 0 && (
                 <div className="d-flex justify-content-center flex-wrap">
                   {packs.map((pack: Pack) => (
                     <PackagesCard
+                      className="mt-3"
                       key={pack.id}
                       dataObj={pack}
                       onAddCart={() => addToCart(pack)}
