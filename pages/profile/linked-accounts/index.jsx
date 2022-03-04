@@ -27,6 +27,9 @@ function LinkedAccounts() {
     gameId: "",
     accId: "",
   });
+  const [isVerified, setIsVerified] = useState(false);
+  const [deletedAccList, setDeletedAccList] = useState([]);
+  const [isNeedReload, setIsNeedReload] = useState(true);
 
   const formRef = useRef(null);
   const schema = Yup.object().shape({
@@ -106,9 +109,7 @@ function LinkedAccounts() {
         (res) => {
           setIsLoading(false);
           toast(res.data, { type: "success" });
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
+          setIsVerified(true);
         },
         () => {
           setIsLoading(false);
@@ -129,6 +130,8 @@ function LinkedAccounts() {
   };
 
   const onDeleteAcc = () => {
+    const newDeletedAccList = [...deletedAccList, accOnDelete];
+
     setIsLoading(true);
     api
       .delete(
@@ -137,7 +140,7 @@ function LinkedAccounts() {
       .then(
         () => {
           setIsLoading(false);
-          window.location.reload();
+          setDeletedAccList(newDeletedAccList);
         },
         () => setIsLoading(false)
       );
@@ -195,6 +198,20 @@ function LinkedAccounts() {
                       linkedAccounts.map((acc, id) => {
                         const { verified } = acc;
 
+                        const checkedDeletedData = {
+                          gameId: game.id,
+                          accId: acc.id,
+                        };
+                        const isDeletedData = deletedAccList.some(
+                          (acc) =>
+                            JSON.stringify(acc) ===
+                            JSON.stringify(checkedDeletedData)
+                        );
+
+                        if (isDeletedData) {
+                          return;
+                        }
+
                         return (
                           <li
                             key={id}
@@ -204,12 +221,13 @@ function LinkedAccounts() {
                             <div className="me-4">{acc.id}</div>
 
                             <div className={styles.btnVerify}>
-                              {!verified && (
+                              {!isVerified && !verified && (
                                 <Button
                                   className="ms-2 font-size-11"
                                   variant="warning"
                                   size="sm"
                                   onClick={() => {
+                                    setIsNeedReload(false);
                                     setOpenModalVerify(true);
                                     setGameOnVerify({
                                       gameId: game.id,
@@ -302,7 +320,12 @@ function LinkedAccounts() {
         centered
         show={openModalVerify}
         onHide={() => {
-          window.location.reload();
+          if (isNeedReload) {
+            window.location.reload();
+          } else {
+            setIsNeedReload(true);
+          }
+
           setOpenModalVerify(false);
         }}
       >
