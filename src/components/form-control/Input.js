@@ -20,6 +20,7 @@ function Input(props) {
       <Field
         id={name}
         name={name}
+        autoComplete="on"
         style={getStyles(name)}
         className="form-control"
         {...rest}

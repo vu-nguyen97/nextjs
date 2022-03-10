@@ -80,7 +80,7 @@ function General() {
                 <div className="mb-2">Email</div>
                 <div
                   className={classNames(
-                    "text-truncate w-50",
+                    "text-truncate w-md-50",
                     styles.disabledInput
                   )}
                 >
@@ -93,21 +93,21 @@ function General() {
 
                 <div className="mt-3">
                   <FormikControl
-                    classNames="mt-2 w-50"
+                    classNames="mt-2 w-md-50"
                     type="password"
                     control="input"
                     name="oldPassword"
                     placeholder="Old password"
                   />
                   <FormikControl
-                    classNames="mt-2 w-50"
+                    classNames="mt-2 w-md-50"
                     type="password"
                     control="input"
                     name="password"
                     placeholder="New password"
                   />
                   <FormikControl
-                    classNames="mt-2 w-50"
+                    classNames="mt-2 w-md-50"
                     type="password"
                     control="input"
                     name="confirmPassword"

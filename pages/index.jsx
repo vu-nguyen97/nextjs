@@ -26,7 +26,7 @@ const Home = () => {
 
   return (
     <Layout>
-      <div className="main-page py-5">
+      <div className="main-page py-lg-5 py-4">
         {isLoading && <Loading />}
 
         {games.length !== 0 && (

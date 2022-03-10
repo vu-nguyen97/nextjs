@@ -4,6 +4,7 @@
   font-size: 13px;
   background-color: #2a2a2a;
   height: $header_height;
+  position: relative;
 }
 
 .activedLine {
@@ -36,4 +37,23 @@
     border-radius: 50%;
     background-color: #2a75e6;
   }
+}
+
+.headerMobile {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: $zindex-overlay;
+  background-color: lighten(#2a2a2a, 10%);
+  color: $white;
+  text-align: center;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.25s ease-in-out, opacity 0.15s;
+}
+
+.isActive {
+  opacity: 1;
 }

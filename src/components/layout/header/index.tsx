@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import classNames from "classnames";
 import { RootState, useAppDispatch } from "@redux/store";
 import { addOrder, logout } from "@redux/actions";
@@ -8,6 +8,7 @@ import Link from "next/link";
 import api from "src/services/axios.config";
 import { useSelector } from "react-redux";
 import { Button } from "react-bootstrap";
+import { TABS } from '../../profile/layout';
 
 const NAVS = [
   { url: "/", name: "store" },
@@ -17,10 +18,16 @@ const NAVS = [
 
 export const Header: React.FC = () => {
   const dispatch = useAppDispatch();
-  const [activedNav, setActivedNav] = useState("");
+  const [activedNav, setActivedNav] = useState(null);
   const [userName, setUserName] = useState("");
+  const [isActive, setIsactive] = useState(false);
+  const [activeProfilePage, setActiveProfilePage] = useState(null)
+
   const orderData = useSelector((state: RootState) => state.order.data);
   const accountInfo = useSelector((state: RootState) => state.account.user);
+
+  const nav = useRef(null);
+  const hamburger = useRef(null);
 
   useEffect(() => {
     const pathname = location.pathname.split("/").slice(1);
@@ -28,6 +35,10 @@ export const Header: React.FC = () => {
 
     if (activedNav) {
       setActivedNav(activedNav.url);
+    } else if (pathname[0] === 'profile' && pathname.length === 1 ) {
+      setActiveProfilePage('')
+    } else if (pathname[0] === 'profile') {
+      setActiveProfilePage(pathname[1])
     }
 
     if (accountInfo!.email) {
@@ -44,22 +55,64 @@ export const Header: React.FC = () => {
     );
   }, []);
 
+  useEffect(() => {
+    isActive && openMenu();
+    document.addEventListener("keydown", keyPress);
+    document.addEventListener("click", clickOutside);
+
+    return () => {
+      document.removeEventListener("keydown", keyPress);
+      document.removeEventListener("click", clickOutside);
+      closeMenu();
+    };
+  });
+
+  const openMenu = () => {
+    document.body.classList.add("off-nav-is-active");
+    nav.current.style.maxHeight = nav.current.scrollHeight + "px";
+    setIsactive(true);
+  };
+
+  const closeMenu = () => {
+    document.body.classList.remove("off-nav-is-active");
+    nav.current && (nav.current.style.maxHeight = null);
+    setIsactive(false);
+  };
+
+  const keyPress = (e) => {
+    isActive && e.keyCode === 27 && closeMenu();
+  };
+
+  const clickOutside = (e) => {
+    if (
+      !isActive ||
+      e.target === hamburger.current
+    ) {
+      return;
+    }
+
+    closeMenu();
+  };
+
   return (
     <div className={styles.header}>
       <div className="d-flex justify-content-between align-items-center text-dark-theme h-100">
         <div className="d-flex align-items-center h-100">
           <Logo />
-          {NAVS.map((nav, id) => (
-            <Link href={nav.url} key={id}>
-              <div className="d-flex align-items-center px-3 text-uppercase nav-hover h-100 position-relative">
-                {nav.name}
+          
+          <div className="d-none d-lg-flex align-items-center h-100">
+            {NAVS.map((nav, id) => (
+              <Link href={nav.url} key={id}>
+                <div className="d-flex align-items-center px-3 text-uppercase nav-hover h-100 position-relative">
+                  {nav.name}
 
-                {nav.url === activedNav && (
-                  <span className={styles.activedLine} />
-                )}
-              </div>
-            </Link>
-          ))}
+                  {nav.url === activedNav && (
+                    <span className={styles.activedLine} />
+                  )}
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
 
         <div className="d-flex align-items-center h-100">
@@ -115,8 +168,39 @@ export const Header: React.FC = () => {
             </Link>
           </div>
 
-          <div className="d-lg-none me-4">aaaa</div>
+          <div className="d-lg-none me-4">
+            <button
+              ref={hamburger}
+              className="header-nav-toggle"
+              onClick={isActive ? closeMenu : openMenu}
+            >
+              <span className="screen-reader">Menu</span>
+              <span className="hamburger">
+                <span className="hamburger-inner"></span>
+              </span>
+            </button>  
+          </div>
         </div>
+      </div>
+      
+      <div ref={nav} className={classNames(isActive && styles.isActive, 'd-lg-none', styles.headerMobile)}>
+        {NAVS.map((nav, id) => (
+          <Link href={nav.url} key={id}>
+            <div className={classNames("py-2 cursor-pointer text-uppercase", nav.url === activedNav && 'fw-bold text-primary')}>
+              {nav.name}
+            </div>
+          </Link>
+        ))}
+
+        {TABS.map((tab, id) => (
+          <Link href={`/profile/${tab.url}`} key={id}>
+            <div className={classNames("py-2 cursor-pointer text-uppercase", tab.url === activeProfilePage && 'fw-bold text-primary')}>
+              {tab.name}
+            </div>
+          </Link>
+        ))}
+
+        <Link href="/login"><div className="py-2 cursor-pointer text-uppercase">Logout</div></Link>
       </div>
     </div>
   );
