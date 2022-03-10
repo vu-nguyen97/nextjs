@@ -87,31 +87,35 @@ export const Header: React.FC = () => {
             </div>
           </Link>
 
-          <Link href="/profile">
-            <div>
-              <Button
-                variant="success"
-                className="accountAvt rounded-circle flex-shrink-0"
-                size="sm"
-                title={userName}
-              >
-                {userName && userName[0].toUpperCase()}
-              </Button>
-            </div>
-          </Link>
+          <div className="d-none d-lg-flex align-items-center h-100">
+            <Link href="/profile">
+              <div>
+                <Button
+                  variant="success"
+                  className="accountAvt rounded-circle flex-shrink-0"
+                  size="sm"
+                  title={userName}
+                >
+                  {userName && userName[0].toUpperCase()}
+                </Button>
+              </div>
+            </Link>
 
-          <Link href="/login">
-            <div
-              onClick={() => dispatch(logout())}
-              className={classNames(
-                "d-flex align-items-center px-3 h-100 bg-primary text-white cursor-pointer",
-                styles.logout
-              )}
-            >
-              <i className="h5 m-0 bi bi-box-arrow-right"></i>
-              <span className="ms-2">Log out</span>
-            </div>
-          </Link>
+            <Link href="/login">
+              <div
+                onClick={() => dispatch(logout())}
+                className={classNames(
+                  "d-flex align-items-center px-3 h-100 bg-primary text-white cursor-pointer",
+                  styles.logout
+                )}
+              >
+                <i className="h5 m-0 bi bi-box-arrow-right"></i>
+                <span className="ms-2">Log out</span>
+              </div>
+            </Link>
+          </div>
+
+          <div className="d-lg-none me-4">aaaa</div>
         </div>
       </div>
     </div>

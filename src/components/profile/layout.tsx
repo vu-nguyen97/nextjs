@@ -6,7 +6,7 @@ import classNames from "classnames";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-const TABS = [
+export const TABS = [
   { id: 0, url: "", name: "Password", icon: "person-fill" },
   {
     id: 1,
@@ -42,7 +42,7 @@ export const ProfileLayout: React.FC = ({ children }: any) => {
       <div className="py-4 flex-grow-1">
         <Container>
           <div className="d-flex">
-            <div>
+            <div className="d-none d-lg-block">
               <div className={styles.sideBar}>
                 {TABS.map((tab) => (
                   <Link href={`/profile/${tab.url}`} key={tab.id}>
@@ -64,7 +64,7 @@ export const ProfileLayout: React.FC = ({ children }: any) => {
             </div>
 
             <div className="w-100">
-              <div className={classNames("ms-3 border", styles.content)}>
+              <div className={classNames("ms-lg-3 border", styles.content)}>
                 {children}
               </div>
             </div>

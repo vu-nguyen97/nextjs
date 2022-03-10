@@ -190,10 +190,16 @@ function LinkedAccounts() {
                       width="32"
                       height="32"
                     />
-                    <div>{game.name}</div>
+                    <div className="text-truncate-2">{game.name}</div>
                   </div>
 
-                  <ul className="ms-2">
+                  <div className="ms-3">
+                    <div className="row mt-2 fw-bold">
+                      <div className="col-4">Account Id</div>
+                      <div className="col-4">Status</div>
+                      <div className="col-4">Action</div>
+                    </div>
+
                     {linkedAccounts.length > 0 &&
                       linkedAccounts.map((acc, id) => {
                         const { verified } = acc;
@@ -213,45 +219,47 @@ function LinkedAccounts() {
                         }
 
                         return (
-                          <li
+                          <div
                             key={id}
-                            className="d-flex align-items-center font-size-14 mt-3"
+                            className="row font-size-14 mt-1"
                           >
-                            <div className="fw-bold">Account Id:&nbsp;</div>
-                            <div className="me-4">{acc.id}</div>
+                            <div className="col-4">{acc.id}</div>
 
-                            <div className={styles.btnVerify}>
-                              {!isVerified && !verified && (
-                                <Button
-                                  className="ms-2 font-size-11"
-                                  variant="warning"
-                                  size="sm"
-                                  onClick={() => {
-                                    setIsNeedReload(false);
-                                    setOpenModalVerify(true);
-                                    setGameOnVerify({
-                                      gameId: game.id,
-                                      accId: acc.id,
-                                    });
-                                  }}
-                                >
-                                  Verify
-                                </Button>
-                              )}
+                            <div className="col-4">
+                              {(!isVerified && !verified) ? (
+                                <div>Not verified</div>
+                              ) : <div>Verified</div>}
                             </div>
 
-                            <Button
-                              className="ms-2 font-size-11"
-                              variant="outline-danger"
-                              size="sm"
-                              onClick={() => handleDeleteAcc(game.id, acc.id)}
-                            >
-                              Delete
-                            </Button>
-                          </li>
+                            <div className="col-4 d-flex align-items-center">
+                              <div className={styles.btnVerify}>
+                                {(!isVerified && !verified) && 
+                                  <i
+                                    className="bi bi-link-45deg h5 cursor-pointer"
+                                    title="Verify this account"
+                                    onClick={() => {
+                                      setIsNeedReload(false);
+                                      setOpenModalVerify(true);
+                                      setGameOnVerify({
+                                        gameId: game.id,
+                                        accId: acc.id,
+                                      });
+                                    }}
+                                  ></i>
+                                }
+                              </div>
+
+                              <div>
+                                <i className="bi bi-trash text-danger h6 cursor-pointer"
+                                  title="Delete this account"
+                                  onClick={() => handleDeleteAcc(game.id, acc.id)}
+                                ></i>
+                              </div>
+                            </div>
+                          </div>
                         );
                       })}
-                  </ul>
+                  </div>
                 </div>
               );
             })}
@@ -274,8 +282,8 @@ function LinkedAccounts() {
               box to verify your account.
             </div>
 
-            <div className="row mt-3">
-              <div className="col-lg-4 col-md-6 col-12">
+            <div className="row mb-4">
+              <div className="col-lg-4 col-md-6 col-12 mt-3">
                 <FormikControl
                   options={games}
                   optionKey="name"
@@ -300,7 +308,7 @@ function LinkedAccounts() {
                 </Button>
               </div>
 
-              <div className="col-lg-8 col-md-6 col-12 d-flex align-items-start justify-content-center">
+              <div className="col-lg-8 col-md-6 col-12 d-flex align-items-start justify-content-center mt-3">
                 {guideImgs.length > 0 && (
                   <img
                     className={classNames(
