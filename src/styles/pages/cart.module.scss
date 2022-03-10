@@ -1,3 +1,5 @@
+@import '../variables';
+
 .cartHeader {
   background: #e8e8e8;
   font-weight: 700;
@@ -11,7 +13,7 @@
 }
 
 .itemRow {
-  border-top: 0 !important;
+  border-top: 1px solid $border-color !important;
 }
 
 .subTotal {
@@ -30,4 +32,46 @@
 
 .selectAcc {
   max-width: 300px;
+}
+
+@media (max-width: 768px) {
+  .customLabel {
+    font-size: 14px;
+  }
+  
+  .cellItem {
+    display: block !important;
+    position: relative;
+    padding-left: 120px !important;
+  }
+  
+  @mixin beforeEl {
+    position: absolute;
+    left: 0.7rem;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+  }
+
+  .field1::before {
+    content: 'Game';
+    @include beforeEl;
+  }
+
+  .field2::before {
+    content: 'Package';
+    @include beforeEl;
+  }
+
+  .field3::before {
+    content: 'Quantity';
+    @include beforeEl;
+  }
+
+  .field4::before {
+    content: 'Total';
+    @include beforeEl;
+  }
 }

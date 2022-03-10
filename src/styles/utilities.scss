@@ -130,6 +130,10 @@
 
 .w-price {
   width: 60px;
+
+  @media (max-width: 576px) {
+    width: 48px;
+  }
 }
 
 .Loading {

@@ -209,7 +209,7 @@ function cart() {
     );
   };
 
-  const cellClassName = "d-flex align-items-center px-lg-3 p-2 h-100 w-100";
+  const cellClassName = "d-flex align-items-center px-lg-3 py-lg-2 py-1 px-2 h-100 w-100";
 
   if (isPaymentSuccess) {
     return (
@@ -270,7 +270,7 @@ function cart() {
 
                   {linkedAccs?.length > 0 && (
                     <div className="mb-3 d-flex justify-content-end align-items-start">
-                      <div className="me-2 mt-err">Account id:</div>
+                      <div className={classNames("me-2 mt-err", styles.customLabel)}>Account id:</div>
                       <FormikControl
                         name="accountId"
                         control="select"
@@ -285,7 +285,7 @@ function cart() {
                     </div>
                   )}
 
-                  <div className="row g-0 border">
+                  <div className="d-none d-md-flex row g-0 border border-bottom-0">
                     <div className="col-4">
                       <div className={styles.cartHeader}>Game</div>
                     </div>
@@ -313,11 +313,11 @@ function cart() {
 
                     return (
                       <div
-                        className={classNames("row g-0 border", styles.itemRow)}
+                        className={classNames("row g-0 border border-top-0", !packIndex && styles.itemRow)}
                         key={pack.id}
                       >
-                        <div className="col-4">
-                          <div className={cellClassName} id="GameName">
+                        <div className="col-md-4 col-12">
+                          <div className={classNames(cellClassName, styles.cellItem, styles.field1)} id="GameName">
                             <div className="d-flex align-items-center">
                               <img
                                 src={icon || "/avatar-game.jpg"}
@@ -328,6 +328,7 @@ function cart() {
                               <div
                                 className="h6 m-0 ms-2 text-truncate-2"
                                 style={{ width: gameWidth }}
+                                title={gameName}
                               >
                                 {gameName}
                               </div>
@@ -335,14 +336,14 @@ function cart() {
                           </div>
                         </div>
 
-                        <div className="col-2">
-                          <div className={cellClassName}>
+                        <div className="col-md-2 col-12">
+                          <div className={classNames(cellClassName, styles.cellItem, styles.field2)}>
                             <div>${usdValue}</div>
                           </div>
                         </div>
 
-                        <div className="col-3">
-                          <div className={cellClassName}>
+                        <div className="col-md-3 col-12">
+                          <div className={classNames(cellClassName, styles.cellItem, styles.field3)}>
                             <IncAndDecButton
                               value={quantity}
                               onChange={(newQuantity: number) =>
@@ -352,8 +353,8 @@ function cart() {
                           </div>
                         </div>
 
-                        <div className="col-3">
-                          <div className={cellClassName}>
+                        <div className="col-md-3 col-12">
+                          <div className={classNames(cellClassName, styles.cellItem, styles.field4)}>
                             <div className="d-flex justify-content-between w-100">
                               <div className="d-flex align-items-center">
                                 <div className="h6 m-0 w-price">
@@ -367,7 +368,7 @@ function cart() {
                                 className="cursor-pointer d-flex me-lg-2"
                                 onClick={() => handleRemovePack(pack)}
                               >
-                                <i className="bi bi-x-lg py-2 px-3"></i>
+                                <i className="bi bi-x-lg py-2 px-sm-3 px-2"></i>
                               </div>
                             </div>
                           </div>

@@ -194,7 +194,7 @@ function LinkedAccounts() {
                   </div>
 
                   <div className="ms-3">
-                    <div className="row mt-2 fw-bold">
+                    <div className="row mt-2 font-size-14 fw-bold">
                       <div className="col-4">Account Id</div>
                       <div className="col-4">Status</div>
                       <div className="col-4">Action</div>
@@ -223,7 +223,7 @@ function LinkedAccounts() {
                             key={id}
                             className="row font-size-14 mt-1"
                           >
-                            <div className="col-4">{acc.id}</div>
+                            <div className="col-4 d-flex align-items-center text-truncate" title={acc.id}>{acc.id}</div>
 
                             <div className="col-4">
                               {(!isVerified && !verified) ? (

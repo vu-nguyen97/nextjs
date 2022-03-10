@@ -98,7 +98,9 @@ export const Header: React.FC = () => {
     <div className={styles.header}>
       <div className="d-flex justify-content-between align-items-center text-dark-theme h-100">
         <div className="d-flex align-items-center h-100">
-          <Logo />
+          <Link href="/">
+            <div className="cursor-pointer"><Logo /></div>
+          </Link>
           
           <div className="d-none d-lg-flex align-items-center h-100">
             {NAVS.map((nav, id) => (
