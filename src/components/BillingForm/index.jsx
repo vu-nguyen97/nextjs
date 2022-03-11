@@ -8,21 +8,21 @@ export const BillingForm = () => {
       <div className="h4 text-center text-uppercase">Payment</div>
       <div className="font-size-14 text-uppercase">Billing detail</div>
 
-      <div className="bg-gray p-3 mt-3 rounded-3 ">
-        <div className="d-flex justify-content-between">
+      <div className="bg-gray p-3 rounded-3 ">
+        <div className="d-flex flex-wrap justify-content-between">
           <FormikControl
             type="text"
             control="input"
             name="firstName"
             placeholder="First Name"
-            classNames="half-width"
+            classNames="half-width mt-3"
           />
           <FormikControl
             type="text"
             control="input"
             name="lastName"
             placeholder="Last Name"
-            classNames="half-width"
+            classNames="half-width mt-3"
           />
         </div>
 
@@ -36,30 +36,30 @@ export const BillingForm = () => {
           />
         </div>
 
-        <div className="d-flex justify-content-between mt-3">
+        <div className="d-flex flex-wrap justify-content-between">
           <FormikControl
             type="text"
             control="input"
             name="city"
             placeholder="City"
-            classNames="half-width"
+            classNames="half-width mt-3"
           />
           <FormikControl
             type="text"
             control="input"
             name="state"
             placeholder="State"
-            classNames="half-width"
+            classNames="half-width mt-3"
           />
         </div>
 
-        <div className="d-flex justify-content-between mt-3">
+        <div className="d-flex flex-wrap justify-content-between">
           <FormikControl
             type="text"
             control="input"
             name="postalCode"
             placeholder="Postal code"
-            classNames="half-width"
+            classNames="half-width mt-3"
           />
           <FormikControl
             options={getData()}
@@ -68,7 +68,7 @@ export const BillingForm = () => {
             control="select"
             name="country"
             placeholder="Country"
-            containerClass="half-width"
+            containerClass="half-width mt-3"
             // defaultOption="Select a country"
             defaultValue="US"
           />

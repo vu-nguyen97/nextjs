@@ -137,7 +137,7 @@ export const PaymentMethod = ({
                     <span className="ms-4 h6 mb-0">Credit Card</span>
                   </div>
 
-                  <div className="my-4 px-5">
+                  <div className="mt-3 mb-sm-2 px-lg-5 px-sm-3">
                     <div className="text-uppercase font-size-14">
                       Card detail
                     </div>
@@ -152,8 +152,8 @@ export const PaymentMethod = ({
                         onKeyPress={(e: any) => onChangeCardNumber(e, formik)}
                       />
 
-                      <div className="d-flex justify-content-between mt-3">
-                        <div className="half-width">
+                      <div className="d-flex flex-wrap justify-content-between">
+                        <div className="half-width mt-3">
                           <FormikControl
                             type="text"
                             control="input"
@@ -165,7 +165,7 @@ export const PaymentMethod = ({
                           />
                         </div>
 
-                        <div className="half-width">
+                        <div className="half-width mt-3">
                           <FormikControl
                             type="text"
                             control="input"

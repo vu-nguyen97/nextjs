@@ -20,6 +20,10 @@ form {
   .half-width {
     width: calc(50% - 0.35rem);
     // position: relative;
+
+    @media (max-width: 576px) {
+      width: 100%;
+    }
   }
 
   // .form-item input[type="email"],
