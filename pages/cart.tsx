@@ -170,6 +170,7 @@ function cart() {
 
     if (!isUpdate) return;
 
+    setIsLoading(true)
     api({
       method: "put",
       url: `store/orders/${orderData?.id}`,
@@ -181,8 +182,9 @@ function cart() {
       (res: any) => {
         dispatch(addOrder(res.data));
         setOrderData(res.data);
+        setIsLoading(false)
       },
-      () => {}
+      () => setIsLoading(false)
     );
   };
 
