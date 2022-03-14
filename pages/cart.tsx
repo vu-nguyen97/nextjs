@@ -257,7 +257,7 @@ const cart = () => {
 
               {orderData?.id && (
                 <>
-                  {!orderData.accountId && !linkedAccs?.length && (
+                  {!linkedAccs?.length && (
                     <div className="d-flex justify-content-end mb-3">
                       <div>
                         <i className="bi bi-exclamation-triangle text-warning me-1"></i>

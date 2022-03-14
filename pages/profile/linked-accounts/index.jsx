@@ -110,6 +110,7 @@ function LinkedAccounts() {
           setIsLoading(false);
           toast(res.data, { type: "success" });
           setIsVerified(true);
+          setOpenModalVerify(false);
         },
         () => {
           setIsLoading(false);
@@ -175,6 +176,7 @@ function LinkedAccounts() {
           <div>
             {linkedInfo.map((linkedAcc) => {
               const { game, linkedAccounts } = linkedAcc;
+              if (!linkedAccounts.length) return;
 
               return (
                 <div key={game.id} className="mt-3">
@@ -219,21 +221,25 @@ function LinkedAccounts() {
                         }
 
                         return (
-                          <div
-                            key={id}
-                            className="row font-size-14 mt-1"
-                          >
-                            <div className="col-4 d-flex align-items-center text-truncate" title={acc.id}>{acc.id}</div>
+                          <div key={id} className="row font-size-14 mt-1">
+                            <div
+                              className="col-4 d-flex align-items-center text-truncate"
+                              title={acc.id}
+                            >
+                              {acc.id}
+                            </div>
 
                             <div className="col-4">
-                              {(!isVerified && !verified) ? (
+                              {!isVerified && !verified ? (
                                 <div>Not verified</div>
-                              ) : <div>Verified</div>}
+                              ) : (
+                                <div>Verified</div>
+                              )}
                             </div>
 
                             <div className="col-4 d-flex align-items-center">
                               <div className={styles.btnVerify}>
-                                {(!isVerified && !verified) && 
+                                {!isVerified && !verified && (
                                   <i
                                     className="bi bi-link-45deg h5 cursor-pointer"
                                     title="Verify this account"
@@ -246,13 +252,16 @@ function LinkedAccounts() {
                                       });
                                     }}
                                   ></i>
-                                }
+                                )}
                               </div>
 
                               <div>
-                                <i className="bi bi-trash text-danger h6 cursor-pointer"
+                                <i
+                                  className="bi bi-trash text-danger h6 cursor-pointer"
                                   title="Delete this account"
-                                  onClick={() => handleDeleteAcc(game.id, acc.id)}
+                                  onClick={() =>
+                                    handleDeleteAcc(game.id, acc.id)
+                                  }
                                 ></i>
                               </div>
                             </div>
