@@ -22,15 +22,17 @@ export const PackagesCard: React.FC<PackagesCard> = (props) => {
     >
       <div>
         <div className="PackagesCard-img position-relative">
-          <img
-            src={dataObj.icon || "/avatar-game.jpg"}
-            className="card-img"
-            alt="card"
-          />
+          <div className="card-img">
+            <img
+              src={dataObj.icon || "/avatar-game.jpg"}
+              className="w-100 h-100 img-contain"
+              alt="card"
+            />
+          </div>
         </div>
 
         <div>
-          <div data-tip={dataObj.description} className="float-icon-right">
+          <div data-tip={dataObj.description} className="float-icon-left">
             <i className="h4 bi bi-question-circle-fill icon-question" />
           </div>
 

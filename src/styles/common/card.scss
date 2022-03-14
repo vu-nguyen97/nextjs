@@ -60,10 +60,6 @@
     padding-bottom: calc(20 / 25 * 100%);
   }
 
-  .card-img {
-    object-position: center top;
-  }
-
   .icon-question {
     color: #1960e4;
   }
@@ -72,5 +68,11 @@
     position: absolute;
     top: 0.8rem;
     right: 0.8rem;
+  }
+
+  .float-icon-left {
+    position: absolute;
+    top: 0.8rem;
+    left: 0.8rem;
   }
 }

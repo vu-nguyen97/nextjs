@@ -14,6 +14,7 @@ import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { OPTION_DEFAULT } from "@components/form-control/Select";
 import AuthRoute from "../src/services/auth.config";
+import { REQUIRED_CONTENT } from "@components/constants";
 
 const cart = () => {
   const dispatch = useAppDispatch();
@@ -29,7 +30,7 @@ const cart = () => {
     accountId: "",
   };
   const schema = Yup.object().shape({
-    accountId: Yup.string().required(),
+    accountId: Yup.string().required(`Account id ${REQUIRED_CONTENT}`),
   });
 
   useEffect(() => {
