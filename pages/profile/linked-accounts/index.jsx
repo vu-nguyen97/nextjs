@@ -81,7 +81,7 @@ function LinkedAccounts() {
               gameId,
               accId: accountId,
             });
-            setOpenModalVerify(true);
+            onOpenVerifyModal();
             setIsLoading(false);
           }
         },
@@ -118,6 +118,18 @@ function LinkedAccounts() {
           setOpenModalVerify(false);
         }
       );
+  };
+
+  const onOpenVerifyModal = () => {
+    setOpenModalVerify(true);
+
+    setTimeout(() => {
+      if (!document.getElementsByClassName("OtpInput")[0]) return;
+
+      document
+        .getElementsByClassName("OtpInput")[0]
+        .focus({ preventScroll: false });
+    }, 200);
   };
 
   const onChangeGame = (gameId) => {
@@ -248,7 +260,7 @@ function LinkedAccounts() {
                                     title="Verify this account"
                                     onClick={() => {
                                       setIsNeedReload(false);
-                                      setOpenModalVerify(true);
+                                      onOpenVerifyModal();
                                       setGameOnVerify({
                                         gameId: game.id,
                                         accId: acc.id,
@@ -356,7 +368,7 @@ function LinkedAccounts() {
 
           <OtpInput
             containerStyle="mt-3 d-flex justify-content-center"
-            inputStyle={styles.otpInput}
+            inputStyle={classNames("OtpInput", styles.otpInput)}
             value={otp}
             onChange={(value) => setOtp(value)}
             numInputs={6}

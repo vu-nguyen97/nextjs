@@ -26,6 +26,9 @@ function signin() {
   };
 
   const handleSubmit = (values) => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+
     setIsLoading(true);
     api
       .post("/auth/login", {
@@ -38,7 +41,7 @@ function signin() {
 
           setIsLoading(false);
           dispatch(login({ token, user }));
-          Router.push("/");
+          Router.push(urlParams.get("from") || "/");
         },
         () => setIsLoading(false)
       );

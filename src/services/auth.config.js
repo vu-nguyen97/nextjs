@@ -12,7 +12,10 @@ const AuthRoute = (Component, ...rest) => {
       if (this.props.isLoggedIn) {
         this.setState({ loading: false });
       } else {
-        Router.push("/login");
+        Router.push({
+          pathname: "/login",
+          query: { from: window.location.pathname },
+        });
       }
     }
 
