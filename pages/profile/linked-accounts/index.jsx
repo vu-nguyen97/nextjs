@@ -27,8 +27,8 @@ function LinkedAccounts() {
     gameId: "",
     accId: "",
   });
-  const [isVerified, setIsVerified] = useState(false);
   const [deletedAccList, setDeletedAccList] = useState([]);
+  const [localVerifiedList, setLocalVerifiedList] = useState([]);
   const [isNeedReload, setIsNeedReload] = useState(true);
 
   const formRef = useRef(null);
@@ -108,9 +108,9 @@ function LinkedAccounts() {
       .then(
         (res) => {
           setIsLoading(false);
-          toast(res.data, { type: "success" });
-          setIsVerified(true);
           setOpenModalVerify(false);
+          toast(res.data, { type: "success" });
+          setLocalVerifiedList([...localVerifiedList, gameOnVerify]);
         },
         () => {
           setIsLoading(false);
@@ -206,14 +206,17 @@ function LinkedAccounts() {
                       linkedAccounts.map((acc, id) => {
                         const { verified } = acc;
 
-                        const checkedDeletedData = {
+                        const checkedData = {
                           gameId: game.id,
                           accId: acc.id,
                         };
                         const isDeletedData = deletedAccList.some(
                           (acc) =>
-                            JSON.stringify(acc) ===
-                            JSON.stringify(checkedDeletedData)
+                            JSON.stringify(acc) === JSON.stringify(checkedData)
+                        );
+                        const isVerified = localVerifiedList.some(
+                          (acc) =>
+                            JSON.stringify(acc) === JSON.stringify(checkedData)
                         );
 
                         if (isDeletedData) {
