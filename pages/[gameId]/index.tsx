@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { PackagesCard } from "@components/card/PackagesCard";
 import { Pack } from "@redux/slices/order";
+import AuthRoute from "src/services/auth.config";
 
 interface Game {
   id: string;
@@ -168,4 +169,4 @@ function DetailGame() {
   );
 }
 
-export default DetailGame;
+export default AuthRoute(DetailGame);

@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Button } from "react-bootstrap";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import Link from "next/link";
 import api from "../src/services/axios.config";
 import FormikControl from "src/components/form-control/FormikControl";
 import SweetAlert from "react-bootstrap-sweetalert";
 import { useRouter } from "next/router";
+import { Loading } from "@components/";
 
 const ForgotPassword = () => {
-  const [isShowAlert, setIsShowAlert] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [alertContent, setAlertContent] = useState("");
 
   const router = useRouter();
 
@@ -20,24 +22,26 @@ const ForgotPassword = () => {
     email: "",
   };
 
-  const handleSubmit = (values) => {
-    console.log('values.email', values.email);
+  const handleSubmit = (values: any) => {
+    setIsLoading(true);
 
-    setIsShowAlert(true)
-    // api
-    // .post("/auth/forgot-password", { email: values.email })
-    // .then(
-    //   (res) => {
-    //     console.log('res', res)
-    //   },
-    //   () => {}
-    // );
-  }
+    api({
+      method: "post",
+      url: "/auth/send-mail-reset-password",
+      data: { email: values.email },
+    }).then(
+      (res) => {
+        setAlertContent(res.data || "");
+        setIsLoading(false);
+      },
+      () => setIsLoading(false)
+    );
+  };
 
   const onConfirm = () => {
-    setIsShowAlert(false);
-    router.push('/login')
-  }
+    setAlertContent("");
+    router.push("/login");
+  };
 
   return (
     <Formik
@@ -47,23 +51,26 @@ const ForgotPassword = () => {
     >
       {() => (
         <Form>
+          {isLoading && <Loading />}
+
           <div className="formSignIn d-flex justify-content-center align-items-center">
             <div className="formWrapper shadow-lg text-center">
-              <div className="fw-bold h3 mb-3">
-                Forgot your password?  
-              </div>
+              <div className="fw-bold h3 mb-3">Forgot your password?</div>
 
-              <div>Please enter the email you use to login.</div>
+              <div>
+                Insert your e-mail and we will send you a link to create your
+                new password.
+              </div>
 
               <FormikControl
                 type="text"
                 control="input"
                 name="email"
                 placeholder="Email"
-                classNames="mt-3 text-start"
+                classNames="mt-4 text-start"
               />
 
-              <Button variant="primary" className="w-100 mt-3" type="submit">
+              <Button variant="primary" className="w-100 mt-4" type="submit">
                 Reset password
               </Button>
 
@@ -73,7 +80,7 @@ const ForgotPassword = () => {
                 </Link>
               </div>
 
-              {isShowAlert && (
+              {alertContent && (
                 <SweetAlert
                   custom
                   title="Check your email!"
@@ -83,15 +90,15 @@ const ForgotPassword = () => {
                   confirmBtnStyle={{ boxShadow: "none" }}
                   btnSize="xs"
                 >
-                  We have sent a new password to your gmail. Please login again and change your password for security.
+                  {alertContent}
                 </SweetAlert>
               )}
             </div>
           </div>
         </Form>
-      )}  
+      )}
     </Formik>
-  )
-}
+  );
+};
 
-export default ForgotPassword
+export default ForgotPassword;

@@ -2,7 +2,7 @@ import React from "react";
 import Router from "next/router";
 import { connect } from "react-redux";
 
-const AuthRoute = (Component = null, ...rest) => {
+const AuthRoute = (Component, ...rest) => {
   class AuthenticatedRoute extends React.Component {
     state = {
       loading: true,

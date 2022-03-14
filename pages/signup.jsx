@@ -55,7 +55,7 @@ function signup() {
       {(formik) => (
         <Form className="formSignUp d-flex justify-content-center align-items-center">
           <div className="formWrapper shadow-lg">
-            <div className="fw-bold h3 mb-3 text-center">Sign up</div>
+            <div className="fw-bold h3 mb-5 text-center">Sign up</div>
 
             <FormikControl
               type="text"
@@ -64,14 +64,14 @@ function signup() {
               placeholder="Email"
             />
             <FormikControl
-              classNames="mt-3"
+              classNames="mt-4"
               type="password"
               control="input"
               name="password"
               placeholder="Password"
             />
             <FormikControl
-              classNames="mt-3"
+              classNames="mt-4"
               type="password"
               control="input"
               name="confirmPassword"
@@ -90,7 +90,7 @@ function signup() {
               </div>
             </div> */}
 
-            <Button variant="primary" className="w-100 mt-3" type="submit">
+            <Button variant="primary" className="w-100 mt-4" type="submit">
               Sign up
             </Button>
 
@@ -104,7 +104,7 @@ function signup() {
               <span className="ms-2">Google</span>
             </div> */}
 
-            <div className="mt-3 text-center font-size-14">
+            <div className="mt-4 text-center font-size-14">
               Have already an account ?{" "}
               <Link href="/login">
                 <a>Login here</a>

@@ -56,7 +56,7 @@ function signin() {
           {isLoading && <Loading />}
 
           <div className="formWrapper shadow-lg">
-            <div className="fw-bold h3 mb-3 text-center">Login</div>
+            <div className="fw-bold h3 mb-5 text-center">Login</div>
 
             <div>
               <Field
@@ -74,7 +74,7 @@ function signin() {
               ) : null}
             </div>
 
-            <div className="mt-3">
+            <div className="mt-4">
               <Field
                 type="password"
                 name="password"
@@ -90,11 +90,11 @@ function signin() {
               ) : null}
             </div>
 
-            <Button variant="primary" className="w-100 mt-3" type="submit">
+            <Button variant="primary" className="w-100 mt-4" type="submit">
               Login
             </Button>
 
-            <div className="mt-3 text-center font-size-14">
+            <div className="mt-4 text-center font-size-14">
               <Link href="/forgot-password">
                 <a>Forgot your password?</a>
               </Link>
@@ -110,7 +110,7 @@ function signin() {
               <span className="ms-2">Google</span>
             </div> */}
 
-            <div className="mt-3 text-center font-size-14">
+            <div className="mt-2 text-center font-size-14">
               Haven't an account ?{" "}
               <Link href="/signup">
                 <a>Sign up here</a>

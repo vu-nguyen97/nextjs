@@ -13,8 +13,9 @@ import FormikControl from "@components/form-control/FormikControl";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { OPTION_DEFAULT } from "@components/form-control/Select";
+import AuthRoute from "../src/services/auth.config";
 
-function cart() {
+const cart = () => {
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [isShowPaymentMethod, setIsShowPaymentMethod] = useState(false);
@@ -170,7 +171,7 @@ function cart() {
 
     if (!isUpdate) return;
 
-    setIsLoading(true)
+    setIsLoading(true);
     api({
       method: "put",
       url: `store/orders/${orderData?.id}`,
@@ -182,7 +183,7 @@ function cart() {
       (res: any) => {
         dispatch(addOrder(res.data));
         setOrderData(res.data);
-        setIsLoading(false)
+        setIsLoading(false);
       },
       () => setIsLoading(false)
     );
@@ -211,7 +212,8 @@ function cart() {
     );
   };
 
-  const cellClassName = "d-flex align-items-center px-lg-3 py-lg-2 py-1 px-2 h-100 w-100";
+  const cellClassName =
+    "d-flex align-items-center px-lg-3 py-lg-2 py-1 px-2 h-100 w-100";
 
   if (isPaymentSuccess) {
     return (
@@ -272,7 +274,14 @@ function cart() {
 
                   {linkedAccs?.length > 0 && (
                     <div className="mb-3 d-flex justify-content-end align-items-start">
-                      <div className={classNames("me-2 mt-err", styles.customLabel)}>Account id:</div>
+                      <div
+                        className={classNames(
+                          "me-2 mt-err",
+                          styles.customLabel
+                        )}
+                      >
+                        Account id:
+                      </div>
                       <FormikControl
                         name="accountId"
                         control="select"
@@ -315,11 +324,21 @@ function cart() {
 
                     return (
                       <div
-                        className={classNames("row g-0 border border-top-0", !packIndex && styles.itemRow)}
+                        className={classNames(
+                          "row g-0 border border-top-0",
+                          !packIndex && styles.itemRow
+                        )}
                         key={pack.id}
                       >
                         <div className="col-md-4 col-12">
-                          <div className={classNames(cellClassName, styles.cellItem, styles.field1)} id="GameName">
+                          <div
+                            className={classNames(
+                              cellClassName,
+                              styles.cellItem,
+                              styles.field1
+                            )}
+                            id="GameName"
+                          >
                             <div className="d-flex align-items-center">
                               <img
                                 src={icon || "/avatar-game.jpg"}
@@ -339,13 +358,25 @@ function cart() {
                         </div>
 
                         <div className="col-md-2 col-12">
-                          <div className={classNames(cellClassName, styles.cellItem, styles.field2)}>
+                          <div
+                            className={classNames(
+                              cellClassName,
+                              styles.cellItem,
+                              styles.field2
+                            )}
+                          >
                             <div>${usdValue}</div>
                           </div>
                         </div>
 
                         <div className="col-md-3 col-12">
-                          <div className={classNames(cellClassName, styles.cellItem, styles.field3)}>
+                          <div
+                            className={classNames(
+                              cellClassName,
+                              styles.cellItem,
+                              styles.field3
+                            )}
+                          >
                             <IncAndDecButton
                               value={quantity}
                               onChange={(newQuantity: number) =>
@@ -356,7 +387,13 @@ function cart() {
                         </div>
 
                         <div className="col-md-3 col-12">
-                          <div className={classNames(cellClassName, styles.cellItem, styles.field4)}>
+                          <div
+                            className={classNames(
+                              cellClassName,
+                              styles.cellItem,
+                              styles.field4
+                            )}
+                          >
                             <div className="d-flex justify-content-between w-100">
                               <div className="d-flex align-items-center">
                                 <div className="h6 m-0 w-price">
@@ -423,6 +460,6 @@ function cart() {
       </Modal>
     </Layout>
   );
-}
+};
 
-export default cart;
+export default AuthRoute(cart);
