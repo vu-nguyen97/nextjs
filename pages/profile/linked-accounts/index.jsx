@@ -189,6 +189,9 @@ function LinkedAccounts() {
             {linkedInfo.map((linkedAcc) => {
               const { game, linkedAccounts } = linkedAcc;
               if (!linkedAccounts.length) return;
+              const hasAccNotVerified = linkedAccounts.some(
+                (el) => !el.verified
+              );
 
               return (
                 <div key={game.id} className="mt-3">
@@ -253,24 +256,30 @@ function LinkedAccounts() {
                             </div>
 
                             <div className="col-4 d-flex align-items-center">
-                              <div className={styles.btnVerify}>
-                                {!isVerified && !verified && (
-                                  <i
-                                    className="bi bi-link-45deg h5 cursor-pointer"
-                                    title="Verify this account"
-                                    onClick={() => {
-                                      setIsNeedReload(false);
-                                      onOpenVerifyModal();
-                                      setGameOnVerify({
-                                        gameId: game.id,
-                                        accId: acc.id,
-                                      });
-                                    }}
-                                  ></i>
-                                )}
-                              </div>
+                              {hasAccNotVerified && (
+                                <div className={styles.btnVerify}>
+                                  {!isVerified && !verified && (
+                                    <i
+                                      className="bi bi-link-45deg h5 cursor-pointer"
+                                      title="Verify this account"
+                                      onClick={() => {
+                                        setIsNeedReload(false);
+                                        onOpenVerifyModal();
+                                        setGameOnVerify({
+                                          gameId: game.id,
+                                          accId: acc.id,
+                                        });
+                                      }}
+                                    ></i>
+                                  )}
+                                </div>
+                              )}
 
-                              <div>
+                              <div
+                                className={classNames({
+                                  "ms-2": !hasAccNotVerified,
+                                })}
+                              >
                                 <i
                                   className="bi bi-trash text-danger h6 cursor-pointer"
                                   title="Delete this account"
