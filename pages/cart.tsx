@@ -288,7 +288,7 @@ const cart = () => {
                         control="select"
                         containerClass={styles.selectAcc}
                         options={linkedAccs}
-                        optionKey="id"
+                        optionLabel="id"
                         optionValue="id"
                         defaultOption="Change receiving account"
                         defaultValue={orderData.accountId}

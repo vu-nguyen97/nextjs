@@ -310,7 +310,7 @@ function LinkedAccounts() {
               <div className="col-lg-4 col-md-6 col-12 mt-3">
                 <FormikControl
                   options={games}
-                  optionKey="name"
+                  optionLabel="name"
                   optionValue="id"
                   control="select"
                   name="gameId"

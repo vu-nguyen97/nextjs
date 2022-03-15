@@ -1,14 +1,18 @@
 import React from "react";
 import FormikControl from "src/components/form-control/FormikControl";
-import { getData } from "country-list";
+import { Country, State } from "country-state-city";
+import { useFormikContext } from "formik";
 
 export const BillingForm = () => {
+  const { values } = useFormikContext();
+  const USCode = "US";
+
   return (
     <div className="mt-3">
       <div className="h4 text-center text-uppercase">Payment</div>
       <div className="font-size-14 text-uppercase">Billing detail</div>
 
-      <div className="bg-gray p-3 rounded-3 ">
+      <div className="bg-gray mt-2 p-3 rounded-3 ">
         <div className="d-flex flex-wrap justify-content-between">
           <FormikControl
             type="text"
@@ -38,6 +42,38 @@ export const BillingForm = () => {
 
         <div className="d-flex flex-wrap justify-content-between">
           <FormikControl
+            options={Country.getAllCountries()}
+            optionLabel="name"
+            optionValue="isoCode"
+            control="select"
+            name="country"
+            placeholder="Country"
+            containerClass="half-width mt-3"
+            defaultValue={USCode}
+          />
+          {values?.country === USCode ? (
+            <FormikControl
+              options={State.getStatesOfCountry(USCode)}
+              optionLabel="name"
+              optionValue="isoCode"
+              control="select"
+              name="state"
+              containerClass="half-width mt-3"
+              defaultOption="Select a state"
+            />
+          ) : (
+            <FormikControl
+              type="text"
+              control="input"
+              name="state"
+              placeholder="State"
+              classNames="half-width mt-3"
+            />
+          )}
+        </div>
+
+        <div className="d-flex flex-wrap justify-content-between">
+          <FormikControl
             type="text"
             control="input"
             name="city"
@@ -47,30 +83,9 @@ export const BillingForm = () => {
           <FormikControl
             type="text"
             control="input"
-            name="state"
-            placeholder="State"
-            classNames="half-width mt-3"
-          />
-        </div>
-
-        <div className="d-flex flex-wrap justify-content-between">
-          <FormikControl
-            type="text"
-            control="input"
             name="postalCode"
             placeholder="Postal code"
             classNames="half-width mt-3"
-          />
-          <FormikControl
-            options={getData()}
-            optionKey="name"
-            optionValue="code"
-            control="select"
-            name="country"
-            placeholder="Country"
-            containerClass="half-width mt-3"
-            // defaultOption="Select a country"
-            defaultValue="US"
           />
         </div>
 

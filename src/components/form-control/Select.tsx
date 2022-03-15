@@ -8,7 +8,7 @@ export const OPTION_DEFAULT = "defaultValue";
 
 interface SelectProps {
   name: string;
-  optionKey: string;
+  optionLabel: string;
   optionValue: string;
   containerClass?: string;
   options: any;
@@ -22,7 +22,7 @@ function Select(props: SelectProps) {
     name,
     containerClass,
     defaultOption,
-    optionKey,
+    optionLabel,
     optionValue,
     options,
     defaultValue,
@@ -61,10 +61,10 @@ function Select(props: SelectProps) {
         )}
         {options.map((data: any) => (
           <option
-            key={data[optionKey] || data.key}
+            key={data[optionLabel] || data.key}
             value={data[optionValue] || data.value}
           >
-            {data[optionKey] || data.key}
+            {data[optionLabel] || data.key}
           </option>
         ))}
       </Form.Select>
