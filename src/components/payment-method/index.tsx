@@ -134,12 +134,14 @@ export const PaymentMethod = ({
                     <div className="px-3 border-gray rounded-3">
                       <i className="h3 m-0 bi bi-credit-card-fill"></i>
                     </div>
-                    <span className="ms-4 h6 mb-0">Credit Card</span>
+                    <span className="ms-3 h6 mb-0">Credit Card</span>
                   </div>
 
-                  <div className="mt-3 mb-sm-2 px-lg-5 px-sm-3">
-                    <div className="text-uppercase font-size-14">
-                      Card detail
+                  <div className="mt-2 mb-sm-2 px-lg-5 px-sm-3">
+                    <div className="text-muted-custom">
+                      Your credit card details are securely SSL connected for
+                      payment processing. We DO NOT store your credit card
+                      information in our servers.
                     </div>
 
                     <div>

@@ -25,6 +25,7 @@ const cart = () => {
   const [linkedAccs, setLinkedAccs] = useState<any>();
   const [activedAccId, setActivedAccId] = useState<string>();
   const [gameWidth, setGameWidth] = useState<number>();
+  const [isBuyWithUSDT, setIsBuyWithUSDT] = useState(false);
 
   const initialValues = {
     accountId: "",
@@ -99,7 +100,10 @@ const cart = () => {
   };
 
   const onClickBuy = () => {
-    setIsShowPaymentMethod(true);
+    if (!isBuyWithUSDT) {
+      setIsShowPaymentMethod(true);
+      return;
+    }
   };
 
   const onSubmitCreditCard = (data: any) => {
@@ -213,6 +217,11 @@ const cart = () => {
     );
   };
 
+  const onBuyWithUSDT = (formik: any) => {
+    setIsBuyWithUSDT(true);
+    formik.submitForm();
+  };
+
   const cellClassName =
     "d-flex align-items-center px-lg-3 py-lg-2 py-1 px-2 h-100 w-100";
 
@@ -242,9 +251,12 @@ const cart = () => {
       <Formik
         validationSchema={schema}
         initialValues={initialValues}
-        onSubmit={() => onClickBuy()}
+        onSubmit={() => {
+          setIsBuyWithUSDT(false);
+          onClickBuy();
+        }}
       >
-        {({}) => (
+        {(formik) => (
           <Form>
             <div className="container my-5">
               {isLoading && <Loading />}
@@ -418,8 +430,8 @@ const cart = () => {
                   })}
 
                   <div className="mt-3 d-flex justify-content-end">
-                    <div>
-                      <div className="d-flex align-items-center">
+                    <div className={styles.payBtns}>
+                      <div className="d-flex align-items-center justify-content-between">
                         <div className="font-size-14">Subtotal :</div>
                         <div
                           className={classNames(
@@ -432,11 +444,20 @@ const cart = () => {
                       </div>
 
                       <Button
-                        className="mt-2 w-100 text-uppercase font-size-13"
+                        className="mt-3 w-100 text-uppercase font-size-13"
                         type="submit"
                       >
+                        {/* Pay with credit card */}
                         Buy now
                       </Button>
+
+                      {/* <Button
+                        variant="dark"
+                        className="mt-2 w-100 text-uppercase font-size-13"
+                        onClick={() => onBuyWithUSDT(formik)}
+                      >
+                        Pay with USDT
+                      </Button> */}
                     </div>
                   </div>
                 </>

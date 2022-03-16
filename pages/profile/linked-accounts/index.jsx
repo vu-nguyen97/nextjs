@@ -99,6 +99,7 @@ function LinkedAccounts() {
 
   const onVerifyAcc = () => {
     setIsLoading(true);
+
     api
       .post("/users/verify-linked-accounts", {
         gameId: gameOnVerify.gameId,
@@ -109,13 +110,25 @@ function LinkedAccounts() {
         (res) => {
           setIsLoading(false);
           setOpenModalVerify(false);
+          setOtp("");
           toast(res.data, { type: "success" });
+
+          if (isNeedReload) {
+            return setTimeout(() => {
+              window.location.reload();
+            }, 800);
+          }
+
           setLocalVerifiedList([...localVerifiedList, gameOnVerify]);
         },
         () => {
           setIsLoading(false);
-          setOtp("");
           setOpenModalVerify(false);
+          setOtp("");
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 800);
         }
       );
   };
@@ -189,6 +202,7 @@ function LinkedAccounts() {
             {linkedInfo.map((linkedAcc) => {
               const { game, linkedAccounts } = linkedAcc;
               if (!linkedAccounts.length) return;
+
               const hasAccNotVerified = linkedAccounts.some(
                 (el) => !el.verified
               );
@@ -362,12 +376,13 @@ function LinkedAccounts() {
         show={openModalVerify}
         onHide={() => {
           if (isNeedReload) {
-            window.location.reload();
+            return window.location.reload();
           } else {
             setIsNeedReload(true);
           }
 
           setOpenModalVerify(false);
+          setOtp("");
         }}
       >
         <Modal.Body className="text-center">

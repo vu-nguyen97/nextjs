@@ -1,4 +1,4 @@
-@import '../variables';
+@import "../variables";
 
 .cartHeader {
   background: #e8e8e8;
@@ -14,6 +14,10 @@
 
 .itemRow {
   border-top: 1px solid $border-color !important;
+}
+
+.payBtns {
+  width: 200px;
 }
 
 .subTotal {
@@ -38,13 +42,13 @@
   .customLabel {
     font-size: 14px;
   }
-  
+
   .cellItem {
     display: block !important;
     position: relative;
     padding-left: 120px !important;
   }
-  
+
   @mixin beforeEl {
     position: absolute;
     left: 0.7rem;
@@ -56,22 +60,22 @@
   }
 
   .field1::before {
-    content: 'Game';
+    content: "Game";
     @include beforeEl;
   }
 
   .field2::before {
-    content: 'Package';
+    content: "Package";
     @include beforeEl;
   }
 
   .field3::before {
-    content: 'Quantity';
+    content: "Quantity";
     @include beforeEl;
   }
 
   .field4::before {
-    content: 'Total';
+    content: "Total";
     @include beforeEl;
   }
 }
