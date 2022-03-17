@@ -15,6 +15,7 @@ import * as Yup from "yup";
 import { OPTION_DEFAULT } from "@components/form-control/Select";
 import AuthRoute from "../src/services/auth.config";
 import { REQUIRED_CONTENT } from "@components/constants";
+import etherConfig from "../src/services/ether.config";
 
 const cart = () => {
   const dispatch = useAppDispatch();
@@ -104,6 +105,8 @@ const cart = () => {
       setIsShowPaymentMethod(true);
       return;
     }
+
+    etherConfig.createTransaction();
   };
 
   const onSubmitCreditCard = (data: any) => {
@@ -447,17 +450,16 @@ const cart = () => {
                         className="mt-3 w-100 text-uppercase font-size-13"
                         type="submit"
                       >
-                        {/* Pay with credit card */}
-                        Buy now
+                        Pay with credit card
                       </Button>
 
-                      {/* <Button
+                      <Button
                         variant="dark"
                         className="mt-2 w-100 text-uppercase font-size-13"
                         onClick={() => onBuyWithUSDT(formik)}
                       >
                         Pay with USDT
-                      </Button> */}
+                      </Button>
                     </div>
                   </div>
                 </>
