@@ -3,8 +3,9 @@ import { combineReducers } from "redux";
 import counter from "@redux/slices/counter";
 import account from "@redux/slices/account";
 import order from "@redux/slices/order";
+import metamask from "@redux/slices/metamask";
 
-const appReducer = combineReducers({ counter, account, order });
+const appReducer = combineReducers({ counter, account, order, metamask });
 
 const rootReducer = (state: any, action: any) => {
   if (action.type === "account/logout") {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Layout, PaymentMethod, Loading } from "@components";
 import styles from "@styles/pages/cart.module.scss";
 import classNames from "classnames";
-import { useAppDispatch } from "@redux/store";
+import { RootState, useAppDispatch } from "@redux/store";
 import { deleteOrder } from "@redux/actions";
 import api from "src/services/axios.config";
 import Link from "next/link";
@@ -16,6 +16,8 @@ import { OPTION_DEFAULT } from "@components/form-control/Select";
 import AuthRoute from "../src/services/auth.config";
 import { REQUIRED_CONTENT } from "@components/constants";
 import etherConfig from "../src/services/ether.config";
+import { useSelector } from "react-redux";
+import { deleteAdr } from "@redux/slices/metamask";
 
 const cart = () => {
   const dispatch = useAppDispatch();
@@ -27,6 +29,8 @@ const cart = () => {
   const [activedAccId, setActivedAccId] = useState<string>();
   const [gameWidth, setGameWidth] = useState<number>();
   const [isBuyWithUSDT, setIsBuyWithUSDT] = useState(false);
+
+  const metamaskAccs = useSelector((state: RootState) => state.metamask);
 
   const initialValues = {
     accountId: "",
@@ -63,6 +67,8 @@ const cart = () => {
       },
       () => setIsLoading(false)
     );
+
+    return dispatch(deleteAdr());
   }, []);
 
   const handleRemovePack = (pack: any) => {
@@ -453,13 +459,26 @@ const cart = () => {
                         Pay with credit card
                       </Button>
 
-                      <Button
-                        variant="dark"
-                        className="mt-2 w-100 text-uppercase font-size-13"
-                        onClick={() => onBuyWithUSDT(formik)}
-                      >
-                        Pay with USDT
-                      </Button>
+                      {metamaskAccs.length > 0 ? (
+                        <Button
+                          variant="dark"
+                          className="mt-2 w-100 text-uppercase font-size-13"
+                          onClick={() => onBuyWithUSDT(formik)}
+                        >
+                          Pay with USDT
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="dark"
+                          className="mt-2 w-100 text-uppercase font-size-13"
+                          onClick={() => {
+                            onBuyWithUSDT(formik);
+                            // setIsConnectMetamask(true);
+                          }}
+                        >
+                          Connect with Metamask
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </>
