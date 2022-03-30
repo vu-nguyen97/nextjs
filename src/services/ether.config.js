@@ -49,28 +49,51 @@ async function createTransaction(priceValue = 1) {
     return storeInstance.store.dispatch(addAdr(accounts));
   }
 
-  const balance = await provider.getBalance(accounts[0]);
-  const decimalBalance = ethers.utils.formatEther(balance);
+  const targetAddress = "0xb7f7db91185Cfab10cCDcB5Ab5d8D0bf8C784540";
 
-  if (Number(decimalBalance) < priceValue) {
-    return toast(
-      "You don't have enough money. Check your balance before you try again.",
-      {
-        type: "error",
-      }
-    );
-  }
-
-  const params = [
+  var contractAddress = "0x337610d27c682e347c9cd60bd4b3b107c9d34ddd";
+  var contractAbiFragment = [
     {
-      from: accounts[0],
-      to: "0x5097d57A068f00db16D6d3AafA2dD97C46bb05F5",
-      value: (priceValue * Math.pow(10, 18)).toString(16),
-      gas: (1000000).toString(16),
+      name: "transfer",
+      type: "function",
+      inputs: [
+        {
+          name: "_to",
+          type: "address",
+        },
+        {
+          type: "uint256",
+          name: "_tokens",
+        },
+      ],
+      constant: false,
+      outputs: [],
+      payable: false,
     },
   ];
 
-  const transactionHash = await provider.send("eth_sendTransaction", params);
+  const usdtContract = new ethers.Contract(
+    contractAddress,
+    contractAbiFragment,
+    provider.getSigner()
+  );
+
+  // How many tokens?
+  const numberOfDecimals = 18;
+  const numberOfTokens = ethers.utils.parseUnits("1.0", numberOfDecimals);
+
+  // Send tokens
+  usdtContract.transfer(targetAddress, numberOfTokens).then(
+    () => {},
+    (err) => {
+      if (err?.code === -32603 && err?.data?.message) {
+        const { message } = err.data;
+        const content = message.charAt(0).toUpperCase() + message.slice(1);
+
+        toast(content, { type: "error" });
+      }
+    }
+  );
 }
 
 const etherConfig = {
